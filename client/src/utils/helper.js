@@ -1,0 +1,50 @@
+import firebase from "firebase/compat/app";
+import "firebase/storage";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+
+export const convertTo12Hour = (time) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const adjustedHours = hours % 12 || 12;
+  return `${adjustedHours}:${minutes < 10 ? "0" + minutes : minutes} ${ampm}`;
+};
+
+export const handleOpen = (startTime, endTime) => {
+  const now = new Date();
+
+  const startHours = parseInt(startTime.split(":")[0], 10);
+  const startMinutes = parseInt(startTime.split(":")[1], 10);
+  const start = new Date(now.setHours(startHours, startMinutes, 0, 0));
+
+  const endHours = parseInt(endTime.split(":")[0], 10);
+  const endMinutes = parseInt(endTime.split(":")[1], 10);
+  const end = new Date(now.setHours(endHours, endMinutes, 0, 0));
+
+  return now >= start && now <= end;
+};
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+
+export default app;
+const storage = getStorage(app);
+
+export const getImageUrl = async (fileName) => {
+  try {
+    const storageRef = ref(storage, fileName);
+    const url = await getDownloadURL(storageRef);
+    return url;
+  } catch (error) {
+    console.error("Error fetching download URL:", error);
+    return null;
+  }
+};
