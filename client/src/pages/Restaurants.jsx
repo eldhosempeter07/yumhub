@@ -124,31 +124,26 @@ const Restaurants = () => {
                   </div>
                 </div>
               </Col>
-              <Col
-                lg={8}
-                className={`res-item
-            ${
-              restaurantData?.restaurant?.length > 1
-                ? " justify-content-around"
-                : ""
-            }`}
-              >
+              <Col lg={8} className="res-item flex-wrap">
                 {restaurantData?.restaurant?.length > 0 ? (
-                  restaurantData?.restaurant?.map((item) => (
-                    <Link
-                      className="text-decoration-none my-4"
-                      to={`/restaurant/${item?.id}`}
-                      key={item.id}
-                    >
-                      <YumCard
-                        name={item?.name}
-                        desc={item?.location}
-                        imageURL={item?.image}
-                        width={"19rem"}
-                        imgHeight="250px"
-                      />
-                    </Link>
-                  ))
+                  restaurantData?.restaurant?.map((item) =>
+                    item?.status == "Blocked" ||
+                    item?.status == "Pending" ? null : (
+                      <Link
+                        className="text-decoration-none my-4 mx-2"
+                        to={`/restaurant/${item?.id}`}
+                        key={item.id}
+                      >
+                        <YumCard
+                          name={item?.name}
+                          desc={item?.location}
+                          imageURL={item?.image}
+                          width={"19rem"}
+                          imgHeight="250px"
+                        />
+                      </Link>
+                    )
+                  )
                 ) : (
                   <Col
                     lg={9}

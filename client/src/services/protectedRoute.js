@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const ProtectedRoute = ({ element }) => {
   const navigate = useNavigate();
   const isAuthenticated = !!localStorage.getItem("token"); // Check if token exists
-  const isBusiness = localStorage.getItem("user");
+  const isUser = localStorage.getItem("user");
   useEffect(() => {
     if (!isAuthenticated && !isUser) {
       navigate("/", { replace: true });

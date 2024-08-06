@@ -16,7 +16,7 @@ function FavouriteCard({ item, imgHeight }) {
     fetchImageUrl();
   }, []);
   return (
-    <Card className="mx-2 my-4 ">
+    <Card className="mx-auto my-4 ">
       <div className="d-flex flex-wrap justify-content-center w-100">
         <div className="img-container">
           <Card.Img
@@ -27,7 +27,7 @@ function FavouriteCard({ item, imgHeight }) {
                 : require(`../utils/Pics/dummy.jpg`)
             }
             height={imgHeight}
-            width={"80px"}
+            width={"100px"}
           />
         </div>
         <div className="px-0 w-75 mt-4 mx-3">

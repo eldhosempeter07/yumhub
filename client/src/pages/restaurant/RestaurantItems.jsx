@@ -37,20 +37,6 @@ const RestaurantItems = () => {
     );
   }
 
-  // const getImageUrl = async (fileName) => {
-  //   try {
-  //     const storageRef = ref(
-  //       storage,
-  //       `gs://yumhub-d8edd.appspot.com/${fileName}`
-  //     );
-  //     const url = await getDownloadURL(storageRef);
-  //     console.log("Download URL:", url);
-  //     return url;
-  //   } catch (error) {
-  //     console.error("Error fetching download URL:", error);
-  //   }
-  // };
-
   return (
     <Row className="restaurant-row">
       <Col lg={2} className="bg-dark ">

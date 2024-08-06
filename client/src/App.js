@@ -37,6 +37,15 @@ import RestaurantTimings from "./pages/restaurant/RestaurantTimings";
 import RestaurantAddTiming from "./pages/restaurant/RestaurantAddTiming";
 import RestaurantEditTiming from "./pages/restaurant/RestaurantEditTiming";
 import RestaurantProfile from "./pages/restaurant/RestaurantProfile";
+import AdminLogin from "./pages/admin/AdminLoginPage";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminRestaurant from "./pages/admin/AdminRestaurant";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminEditOrder from "./pages/admin/AdminEditOrder";
+import AdminEditRestaurant from "./pages/admin/AdminEditRestaurant";
+import AdminEditUser from "./pages/admin/AdminEditUser";
+import AdminProtectedRoute from "./services/adminProtetedRoute";
 
 const App = () => {
   const { loading, data } = useQuery(CART);
@@ -47,7 +56,115 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<UserLoginPage />} />
         <Route path="/register" element={<UserRegisterPage />} />
-        {/* <Route path="/admin-login" element={<AdminLoginPage />} /> */}
+        <Route path="/admin">
+          <Route path="login" element={<AdminLogin />} />
+          <Route
+            path="dashboard"
+            element={
+              <Suspense
+                fallback={
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <Spinner animation="border" />
+                  </div>
+                }
+              >
+                <AdminProtectedRoute element={<AdminDashboard />} />
+              </Suspense>
+            }
+          />
+          <Route
+            path="restaurant"
+            element={
+              <Suspense
+                fallback={
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <Spinner animation="border" />
+                  </div>
+                }
+              >
+                <AdminProtectedRoute element={<AdminRestaurant />} />
+              </Suspense>
+            }
+          />
+          <Route
+            path="restaurant/edit/:id"
+            element={
+              <Suspense
+                fallback={
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <Spinner animation="border" />
+                  </div>
+                }
+              >
+                <AdminProtectedRoute element={<AdminEditRestaurant />} />
+              </Suspense>
+            }
+          />
+          <Route
+            path="users"
+            element={
+              <Suspense
+                fallback={
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <Spinner animation="border" />
+                  </div>
+                }
+              >
+                <AdminProtectedRoute element={<AdminUsers />} />
+              </Suspense>
+            }
+          />
+          <Route
+            path="user/edit/:id"
+            element={
+              <Suspense
+                fallback={
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <Spinner animation="border" />
+                  </div>
+                }
+              >
+                <AdminProtectedRoute element={<AdminEditUser />} />
+              </Suspense>
+            }
+          />
+          <Route
+            path="orders"
+            element={
+              <Suspense
+                fallback={
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <Spinner animation="border" />
+                  </div>
+                }
+              >
+                <AdminProtectedRoute element={<AdminOrders />} />
+              </Suspense>
+            }
+          />
+          <Route
+            path="order/edit/:resId/:id"
+            element={
+              <Suspense
+                fallback={
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <Spinner animation="border" />
+                  </div>
+                }
+              >
+                <AdminProtectedRoute element={<AdminEditOrder />} />
+              </Suspense>
+            }
+          />
+          {/* <Route path="login" element={<AdminLogin />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="restaurant" element={<AdminRestaurant />} />
+          <Route path="restaurant/edit/:id" element={<AdminEditRestaurant />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="user/edit/:id" element={<AdminEditUser />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="order/edit/:resId/:id" element={<AdminEditOrder />} /> */}
+        </Route>
         <Route path="/restaurant-login" element={<RestaurantLoginPage />} />
         <Route
           path="/restaurant-register"

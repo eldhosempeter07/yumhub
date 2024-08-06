@@ -73,9 +73,11 @@ type User {
 }
 
 type UserProfile {
+  _id: String
   email: String
   phone: String
   name: String
+  status: String
 }
 
 input UserProfileInput {
@@ -228,12 +230,10 @@ type Order {
   promoCode: String
   subTotal: String
   deliveryFee: String
-  restaurantId: String
   orderItems: [CheckoutItem]
   tax: String
   totalAmount: String
   instructions: String
-  status: String
 }
 
 input CItemInput {
@@ -360,6 +360,17 @@ type Query {
   getRestaurantTiming(id: ID!): RestaurantTiming
 
   restaurantInfo: Restaurant!
+
+  # Super Admin
+
+  restaurants: [Restaurant]
+  users: [UserProfile]
+  adminOrders: [Order]
+  adminRestaurantOrderById(id: String, restaurantId: String): Order
+  adminRestaurantInfo(id: String): Restaurant!
+
+  adminUserInfo(id: String): UserProfile!
+  adminMonthlyOrders: [OrderBarChart]
 }
 
 type Mutation {
@@ -397,4 +408,19 @@ type Mutation {
     timing: UpdateRestaurantTimingInput!
   ): RestaurantTiming!
   deleteRestaurantTiming(id: ID!): Boolean!
+
+  # Super Admin
+
+  adminLogin(user: UserLoginInput): LoginData
+  adminEditOrderStatus(
+    orderId: ID!
+    newStatus: String!
+    restaurantId: String!
+  ): Order
+
+  adminEditRestaurantStatus(restaurantId: ID!, newStatus: String!): Restaurant
+  adminDeleteRestaurant(id: ID!): Restaurant!
+
+  adminEditUser(newStatus: String!, userId: ID!): UserProfile
+  adminDeleteUser(id: ID!): UserProfile!
 }

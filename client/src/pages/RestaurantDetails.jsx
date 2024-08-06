@@ -170,7 +170,7 @@ const RestaurantDetails = () => {
           {/* Menu */}
           <div>
             <h5>Menu</h5>
-            <div className="d-flex justify-content-between flex-wrap">
+            <div className="d-flex menu-container flex-wrap">
               {foodItemsData?.foodItemsByRestaurant?.map((item) => (
                 <MenuItems
                   key={item.id}

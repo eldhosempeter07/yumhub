@@ -36,12 +36,12 @@ const Cart = () => {
     refetchQueries: [{ query: CART }],
   });
 
-  const handleCart = async (item) => {
+  const handleCart = async (item, restaurantId) => {
     await addToCart({
       variables: {
         cartItems: {
           item,
-          restaurantId: data?.cart?.restaurantId,
+          restaurantId: restaurantId,
         },
       },
     });
@@ -75,9 +75,10 @@ const Cart = () => {
                 {data?.cart?.cartItems?.length > 0 &&
                   data?.cart?.cartItems?.map((item) =>
                     item?.items?.map((i) => (
-                      <div className="border border-3 px-2 my-5 rounded">
+                      <div>
                         <CartItems
                           item={i}
+                          restaurantId={item?.restaurantId}
                           restaurantName={item?.restaurantName}
                           width={"80rem"}
                           imgHeight="200px"

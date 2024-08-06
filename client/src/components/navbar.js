@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { Navbar as BootstrapNavbar, Nav, NavDropdown } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { CART } from "../services/graphql/auth";
 import Logo from "../utils/Pics/Logo.jpg";
+import { isTokenExpired } from "../utils/helper";
 
 const Navbar = () => {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -23,6 +24,28 @@ const Navbar = () => {
       refetch();
     }
   }, [data?.cart?.userId, refetch]);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+      if (isTokenExpired(token)) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("name");
+        localStorage.removeItem("type");
+        if (
+          location.pathname !== "/" ||
+          location.pathname !== "/restaurants" ||
+          location.pathname.includes("/restaurant") ||
+          location.pathname.includes("/login") ||
+          location.pathname.includes("/register")
+        ) {
+          navigate("/");
+        }
+      }
+    }
+  }, [navigate]);
 
   return (
     <BootstrapNavbar collapseOnSelect expand="lg" className="yum_nav py-1">
@@ -118,6 +141,13 @@ const Navbar = () => {
               Signup
             </NavDropdown.Item>
           </NavDropdown>
+          <Nav.Link
+            className="text-white text-uppercase"
+            as={Link}
+            to="/admin/login"
+          >
+            Super Admin
+          </Nav.Link>
         </Nav>
       </BootstrapNavbar.Collapse>
     </BootstrapNavbar>

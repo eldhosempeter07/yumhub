@@ -5,6 +5,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   name: { type: String },
   phone: { type: String },
+  status: { type: String, default: "Approved" },
   createdAt: { type: Date, default: Date.now },
 });
 

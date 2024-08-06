@@ -1,11 +1,11 @@
 import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
-import { Col, Nav, Row } from "react-bootstrap";
+import { Badge, Col, Nav, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getImageUrl } from "../utils/helper";
 
 function OrderCard({ order }) {
-  const { orderItems, totalAmount } = order;
+  const { orderItems, subTotal, tax, deliveryFee } = order;
 
   const [imageUrl, setImageUrl] = useState(null);
 
@@ -32,12 +32,19 @@ function OrderCard({ order }) {
                   className="border border-3 px-2 my-5 rounded"
                 >
                   <Nav.Link
-                    className="fw-bold cart-item-name text-success fs-3 mt-3 mx-3"
+                    className="fw-bold cart-item-name text-success fs-4 mt-3 mx-3"
                     as={Link}
                     to={`/restaurant/${item?.restaurantId}`}
                   >
-                    {item?.restaurantName}
-                  </Nav.Link>{" "}
+                    {item?.restaurantName}{" "}
+                    <Badge
+                      bg={`${
+                        item?.status === "Declined" ? "danger" : "success"
+                      } `}
+                    >
+                      {item?.status}
+                    </Badge>
+                  </Nav.Link>
                   {item.items.map((i) => (
                     <div key={i.id}>
                       <Card className="mx-3 my-5 ">
@@ -49,8 +56,8 @@ function OrderCard({ order }) {
                                 "BIRIYANI.jpg",
                                 i?.imageURL
                               )}
-                              height={"230px"}
-                              width={"100px"}
+                              height={"200px"}
+                              width={"18rem"}
                             />
                           </Col>
                           <Col lg={8} className="px-0 ">
@@ -67,6 +74,16 @@ function OrderCard({ order }) {
                       </Card>
                     </div>
                   ))}
+                  <h3 className="text-end mx-2 my-3 fw-bold">
+                    Total{" "}
+                    <span>
+                      {(
+                        parseFloat(subTotal) +
+                        parseFloat(deliveryFee) +
+                        parseFloat(tax)
+                      ).toFixed(2)}
+                    </span>
+                  </h3>
                 </div>
               ))}
           </div>

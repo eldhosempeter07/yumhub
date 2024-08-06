@@ -9,16 +9,10 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { GET_RESTAURANT_MONTHLY_ORDERS } from "../services/graphql/restaurant";
 import { Spinner } from "react-bootstrap";
 
-const CustomChart = () => {
-  const {
-    data: monthlyData,
-    loading: loadingMonthly,
-    error: errorMonthly,
-  } = useQuery(GET_RESTAURANT_MONTHLY_ORDERS);
-  if (loadingMonthly) {
+const CustomChart = ({ loading, error, data }) => {
+  if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <Spinner animation="border" />
@@ -26,10 +20,10 @@ const CustomChart = () => {
     );
   }
 
-  if (errorMonthly) {
+  if (error) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-red-500 text-lg">{errorMonthly.message}</p>
+        <p className="text-red-500 text-lg">{error?.message}</p>
       </div>
     );
   }
@@ -41,11 +35,7 @@ const CustomChart = () => {
       </h4>
 
       <div className="d-flex justify-content-center">
-        <BarChart
-          width={1000}
-          height={400}
-          data={monthlyData?.restaurantMonthlyOrders}
-        >
+        <BarChart width={1000} height={400} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="day" />
           <YAxis />

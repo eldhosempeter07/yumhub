@@ -12,10 +12,12 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 (async () => {
   const app = express();
   app.use(cors());
+  app.use(express.json());
 
   const userContext = ({ req }) => {
     const authHeader = req.headers.authorization;
@@ -64,15 +66,31 @@ require("dotenv").config();
     console.error("Error connecting to MongoDB", error);
   }
 
-  // const storage = multer.diskStorage({
-  //   destination: (req, file, cb) => {
-  //     cb(null, UPLOAD_DIR);
-  //   },
-  //   filename: (req, file, cb) => {
-  //     console.log(file);
-  //     cb(null, file.originalname);
-  //   },
-  // });
+  app.post("/create-checkout-session", async (req, res) => {
+    try {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: req.body.items.map((item) => {
+          return {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: item.name,
+              },
+              unit_amount: item.price * 100,
+            },
+            quantity: item.quantity,
+          };
+        }),
+        success_url: "http://localhost:3000/success",
+        cancel_url: "http://localhost:3000/checkout",
+      });
+      res.json({ url: session.url });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
 
   app.post("/upload", upload.single("file"), async (req, res) => {
     try {
@@ -100,7 +118,6 @@ require("dotenv").config();
         expires: "01-01-2500",
       });
 
-      console.log("File uploaded to Firebase Storage:", url);
       res.json({ filePath: url });
     } catch (error) {
       console.error("Error uploading file to Firebase Storage:", error);

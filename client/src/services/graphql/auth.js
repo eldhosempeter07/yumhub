@@ -99,12 +99,6 @@ export const DELETE_CART_ITEM = gql`
   mutation DeleteCartItem($itemId: String!) {
     deleteCartItem(itemId: $itemId) {
       userId
-      restaurantId
-      items {
-        id
-        count
-      }
-      totalCount
     }
   }
 `;
@@ -264,13 +258,12 @@ export const ORDERS = gql`
       tax
       instructions
       totalAmount
-      restaurantId
-      status
       orderItems {
         restaurantId
         restaurantName
         total
         totalCount
+        status
         items {
           id
           count

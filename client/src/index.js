@@ -19,8 +19,6 @@ const httpLink = createUploadLink({
   uri: backendURL,
 });
 
-// const link = createUploadLink({ uri: backendURL });
-
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("token");
   return {

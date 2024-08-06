@@ -16,11 +16,9 @@ import {
   ADD_TO_FAVOURITE,
   CART,
   FAVOURITE,
-  GET_RESTAURANT_TIMING_BY_DAY,
 } from "../services/graphql/auth";
 import { getImageUrl } from "../utils/helper";
 const HomePage = () => {
-  const isAuthenticated = !!localStorage.getItem("token");
   const { data, error, loading } = useQuery(GET_FOOD_ITEMS);
   const {
     data: restaurantData,
@@ -91,7 +89,7 @@ const HomePage = () => {
       variables: {
         favouriteItems: {
           itemId: itemId,
-          restaurantId: id,
+          restaurantId: data?.restaurantId,
         },
       },
     });
@@ -100,7 +98,7 @@ const HomePage = () => {
   return (
     <div>
       <Navbar />
-      {resturantsLoading ? (
+      {resturantsLoading || imageUrl == null ? (
         <div className="d-flex justify-content-center align-items-center vh-100">
           <Spinner animation="border" />
         </div>
@@ -150,23 +148,26 @@ const HomePage = () => {
                   View All
                 </a>
               </div>
-              <div className="d-flex justify-content-between  flex-wrap">
+              <div className="d-flex flex-wrap">
                 {restaurantData?.restaurant?.length > 0 &&
-                  restaurantData?.restaurant?.map((item) => (
-                    <Link
-                      className="text-decoration-none"
-                      to={`/restaurant/${item?.id}`}
-                      key={item.id}
-                    >
-                      <YumCard
-                        name={item?.name}
-                        desc={item?.location}
-                        imageURL={item?.image}
-                        width={"13rem"}
-                        imgHeight="200px"
-                      />
-                    </Link>
-                  ))}
+                  restaurantData?.restaurant?.map((item) =>
+                    item?.status == "Blocked" ||
+                    item?.status == "Pending" ? null : (
+                      <Link
+                        className="text-decoration-none mx-3"
+                        to={`/restaurant/${item?.id}`}
+                        key={item.id}
+                      >
+                        <YumCard
+                          name={item?.name}
+                          desc={item?.location}
+                          imageURL={item?.image}
+                          width={"13rem"}
+                          imgHeight="200px"
+                        />
+                      </Link>
+                    )
+                  )}
               </div>
             </div>
           </main>

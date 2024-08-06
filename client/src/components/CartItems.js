@@ -9,6 +9,7 @@ function CartItems({
   handleCart,
   handleDeleteCartItem,
   restaurantName,
+  restaurantId,
 }) {
   const { name, description, price, rating, category, id, count, imageURL } =
     item;
@@ -31,11 +32,11 @@ function CartItems({
   }, []);
 
   return (
-    <Card className="mx-1 my-3 ">
+    <Card className="mx-1 my-3 border border-3 rounded my-5 py-3 px-2 ">
       <div className="text-end">
         <p className="text-success fw-bold">{restaurantName}</p>
       </div>
-      <div className="d-flex flex-wrap justify-content-center w-100">
+      <div className="d-flex flex-wrap justify-content-center">
         <div className="img-container">
           <Card.Img
             variant="top"
@@ -48,7 +49,7 @@ function CartItems({
             width={"100px"}
           />
         </div>
-        <div className={`px-0 w-75 ${checkout ? null : "mt-4"} mx-5`}>
+        <div className={`px-0 checkout-item ${checkout ? null : "mt-4"} mx-5`}>
           <span className="fw-bold cart-item-name text-success">{name}</span>
           <div className=" d-flex flex-wrap justify-content-between fw-bold">
             <p className="cart-item my-3">{category}</p>
@@ -75,7 +76,7 @@ function CartItems({
                   />
                   <p
                     className="count-value"
-                    onClick={() => handleCart({ id, count: 1 })}
+                    onClick={() => handleCart({ id, count: 1 }, restaurantId)}
                   >
                     +
                   </p>

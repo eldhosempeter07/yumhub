@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
-import { Accordion, Badge, Card, Col, Form, Nav, Row } from "react-bootstrap";
+import {
+  Accordion,
+  Badge,
+  Card,
+  Col,
+  Form,
+  Nav,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {
   ADDRESS,
@@ -20,20 +29,20 @@ const Checkout = () => {
   const [total, setTotal] = useState(0);
   const [instructions, setInstructions] = useState("Meet at my door");
   const [id, setId] = useState(null);
+  const { data: addressData, loading } = useQuery(ADDRESS);
 
   const { data: cartData } = useQuery(CART, {
     onCompleted: (cartData) => {
       setId(cartData?.cart?.restaurantId);
-      setTotal(cartData?.cart?.total + 3.99 + 4.0);
+      setTotal(parseFloat(cartData?.cart?.total) + 3.99 + 4.0);
     },
   });
-
-  const { data: addressData } = useQuery(ADDRESS);
 
   useEffect(() => {
     const primary = addressData?.address?.find((addr) => addr.primary);
     setAddress(primary?.id);
   }, [addressData]);
+
   const { data: paymentData } = useQuery(PAYMENT);
 
   const [updateAddress] = useMutation(UPDATE_ADDRESS, {
@@ -45,9 +54,6 @@ const Checkout = () => {
   }, [addressData]);
 
   const [createOrder] = useMutation(CREATE_ORDER, {
-    onCompleted: () => {
-      navigate("/success");
-    },
     refetchQueries: [{ query: CART }],
   });
 
@@ -80,6 +86,43 @@ const Checkout = () => {
       });
     }
   };
+
+  const handleCheckout = () => {
+    fetch("http://localhost:4000/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        items: [
+          {
+            name: "YumHub",
+            price: total.toFixed(0),
+            quantity: 1,
+          },
+        ],
+      }),
+    })
+      .then(async (res) => {
+        if (res.ok) return res.json();
+        const json = await res.json();
+        return await Promise.reject(json);
+      })
+      .then(async ({ url }) => {
+        handlePlaceOrder();
+        window.location = url;
+      })
+      .catch((e) => {
+        console.error(e.error);
+      });
+  };
+
+  if (cartData?.cart.totalCount == 0) {
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <Spinner animation="border" />
+    </div>;
+    return navigate("/cart");
+  }
 
   return (
     <>
@@ -163,7 +206,7 @@ const Checkout = () => {
 
               <p className="border-top border-1"></p>
 
-              <h4 className="fw-semibold">Payment</h4>
+              {/* <h4 className="fw-semibold">Payment</h4>
               <Card.Text className="d-flex mt-4">
                 <h3>
                   <i className="bi bi-credit-card-fill text-secondary"></i>
@@ -174,7 +217,7 @@ const Checkout = () => {
                     <h5>****{payData?.cardNumber.slice(14)}</h5>
                   </div>
                 ))}
-              </Card.Text>
+              </Card.Text> */}
 
               {!isAddressExist && (
                 <p className="text-center fs-5 text-danger fw-bold">
@@ -182,13 +225,13 @@ const Checkout = () => {
                 </p>
               )}
 
-              <div className="text-center">
+              <div className="text-center my-5">
                 <Nav.Link
                   className="checkout-btn text-white"
-                  onClick={handlePlaceOrder}
+                  onClick={handleCheckout}
                   disabled={!isAddressExist}
                 >
-                  Place order
+                  Pay Now
                 </Nav.Link>
               </div>
             </Card.Body>
@@ -214,10 +257,7 @@ const Checkout = () => {
                   <Accordion.Body>
                     {cartData?.cart?.cartItems?.map((item) =>
                       item?.items?.map((i) => (
-                        <div
-                          key={i.id}
-                          className="border border-3 px-2 my-5 rounded"
-                        >
+                        <div key={i.id}>
                           <CartItems
                             item={i}
                             restaurantName={item?.restaurantName}
@@ -261,7 +301,7 @@ const Checkout = () => {
                 </div>
                 <div className="d-flex justify-content-between text-black">
                   <h4>Total</h4>
-                  <h4>${total.toFixed(2)}</h4>
+                  <h4>${total.toFixed(0)}</h4>
                 </div>
               </Card.Text>
             </Card.Body>

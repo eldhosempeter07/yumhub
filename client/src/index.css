@@ -165,6 +165,8 @@
   top: 85vh;
   font-weight: bold;
   font-size: 20px;
+  background-color: #008000 !important;
+  color: #fff;
 }
 
 /* Checkout  */
@@ -266,6 +268,14 @@
   flex-wrap: wrap;
 }
 
+.checkout-item {
+  width: 30vw;
+}
+
+.menu-container {
+  margin: auto 40px;
+}
+
 .checkout-order-card {
   width: 35rem;
 }
@@ -292,6 +302,12 @@
 
 .fav-container {
   width: 95% !important;
+}
+
+/* Admin  */
+
+.admin-nav {
+  background-color: #ffb833 !important;
 }
 
 @media (max-width: 1530px) {
@@ -338,6 +354,10 @@
   .time-form input,
   .time-form select {
     width: auto !important;
+  }
+
+  .menu-container {
+    margin: auto 0px;
   }
 }
 @media (max-width: 576px) {

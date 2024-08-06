@@ -49,7 +49,7 @@ function MenuItems({
   };
 
   return (
-    <Card style={{ width: `${width ? width : "13rem"}` }} className="mx-2 ">
+    <Card style={{ width: `${width ? width : "13rem"}` }} className="mx-4 ">
       <div className="img-container">
         <Card.Img
           variant="top"

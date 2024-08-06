@@ -27,7 +27,9 @@ const resolvers = {
       return foodItems;
     },
     orders: async (_, __, { user }) => {
-      const order = await Order.find({ userId: user.email });
+      const order = await Order.find({ userId: user.email }).sort({
+        createdAt: -1,
+      });
       return order;
     },
     favourite: async (_, __, { user }) => {
@@ -186,37 +188,6 @@ const resolvers = {
       }
     },
 
-    // cart: async (_, __, { user }) => {
-    //   try {
-    //     if (!user) {
-    //       return {};
-    //     }
-    //     const cart = await Cart.find({ userId: user?.email });
-    //     if (cart == null) {
-    //       return cart;
-    //     }
-    //     const ids = cart?.items.map((item) => item.id);
-    //     const Cartitems = await Item.find({ _id: { $in: ids } });
-    //     const updatedCartItems = cart.items.map((item) => {
-    //       const matchingItem = Cartitems.find((cartItem) =>
-    //         cartItem._id.equals(item.id)
-    //       );
-    //       return {
-    //         ...item,
-    //         ...matchingItem.toObject(),
-    //       };
-    //     });
-    //     let total = 0;
-
-    //     updatedCartItems.forEach((item) => {
-    //       total += item.price * item.count;
-    //     });
-    //     cart.total = total.toFixed(2);
-    //     cart.items = updatedCartItems;
-
-    //     return cart;
-    //   } catch (error) {}
-    // },
     address: async (_, __, { user }) =>
       await Address.find({ userId: user.email }),
     addressById: async (_, { id }) => {
@@ -271,6 +242,8 @@ const resolvers = {
               restaurantName: restaurant?.name,
             },
           },
+        }).sort({
+          createdAt: -1,
         });
 
         const formattedOrders = orders.map((order) => ({
@@ -386,6 +359,125 @@ const resolvers = {
         throw new Error("Failed to fetch restaurant timing");
       }
     },
+    restaurants: async () => {
+      try {
+        const restaurants = await Resturant.find();
+        return restaurants;
+      } catch (error) {
+        throw new Error(`Error fetching restaurants: ${error.message}`);
+      }
+    },
+    users: async () => {
+      try {
+        const users = await User.find({ name: { $ne: "Admin" } });
+        return users;
+      } catch (error) {
+        throw new Error(`Error fetching users: ${error.message}`);
+      }
+    },
+
+    adminOrders: async () => {
+      try {
+        const orders = await Order.find().sort({
+          createdAt: -1,
+        });
+        return orders;
+      } catch (error) {
+        throw new Error(`Error fetching users: ${error.message}`);
+      }
+    },
+
+    adminRestaurantOrderById: async (_, { id, restaurantId }) => {
+      try {
+        const restaurant = await Resturant.findById(restaurantId);
+        if (!restaurant) {
+          throw new Error("Restaurant not found.");
+        }
+        const order = await Order.findOne({
+          _id: id,
+          orderItems: {
+            $elemMatch: {
+              restaurantName: restaurant.name,
+            },
+          },
+        });
+
+        if (!order) {
+          throw new Error("Order not found.");
+        }
+
+        const formattedOrder = {
+          ...order._doc,
+          orderItems: order.orderItems.filter(
+            (item) => item.restaurantName === restaurant.name
+          ),
+        };
+
+        return formattedOrder;
+      } catch (error) {
+        console.error("Error fetching restaurant order by ID:", error);
+        return null;
+      }
+    },
+
+    adminRestaurantInfo: async (_, { id }) => {
+      try {
+        const userInfo = await Resturant.findById(id);
+        return userInfo;
+      } catch (error) {
+        return { message: error };
+      }
+    },
+
+    adminUserInfo: async (_, { id }) => {
+      try {
+        const userInfo = await User.findById(id);
+        return userInfo;
+      } catch (error) {
+        return { message: error };
+      }
+    },
+
+    adminMonthlyOrders: async () => {
+      const currentDate = new Date();
+      const startDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+      const endDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        0
+      );
+
+      const orders = await Order.find({
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      });
+
+      const dailyOrders = Array(31).fill(0);
+
+      orders.forEach((order) => {
+        const orderDate = order.createdAt;
+        if (
+          orderDate.getMonth() === currentDate.getMonth() &&
+          orderDate.getFullYear() === currentDate.getFullYear()
+        ) {
+          dailyOrders[orderDate.getDate() - 1] += 1;
+        }
+      });
+      const day = Array.from({ length: 32 }, (_, index) => index + 1);
+
+      const result = dailyOrders.map((order, index) => ({
+        order,
+        day: day[index],
+      }));
+
+      return result;
+    },
   },
   Mutation: {
     createRestaurant: async (_, { restaurant }) => {
@@ -415,7 +507,7 @@ const resolvers = {
             const token = jwt.sign(
               { email: restaurant?.email },
               process.env.JWT_SECRET,
-              { expiresIn: "10h" }
+              { expiresIn: 86400 }
             );
             return {
               user: loginRestaurant,
@@ -462,7 +554,7 @@ const resolvers = {
             const token = jwt.sign(
               { email: user?.email },
               process.env.JWT_SECRET,
-              { expiresIn: "10h" }
+              { expiresIn: 86400 }
             );
             return {
               user: loginUser,
@@ -644,7 +736,6 @@ const resolvers = {
 
     deleteCartItem: async (_, { itemId }, { user }) => {
       try {
-        user;
         const cart = await Cart.findOne({ userId: user.email });
         cart.items = cart.items.filter((item) => item.id != itemId);
         cart.markModified("items");
@@ -759,6 +850,112 @@ const resolvers = {
       } catch (error) {
         console.error(error);
         throw new Error("Failed to delete restaurant timing");
+      }
+    },
+
+    adminLogin: async (_, { user }) => {
+      try {
+        const loginAdmin = await User.findOne({
+          email: user?.email,
+        });
+
+        if (loginAdmin != null) {
+          const password = await verifyPassword(
+            user.password,
+            loginAdmin.password
+          );
+          if (password) {
+            const token = jwt.sign(
+              { email: user?.email },
+              process.env.JWT_SECRET,
+              { expiresIn: 86400 }
+            );
+            return {
+              user: loginAdmin,
+              token,
+              message: "Sucessfully logged in",
+              type: "admin",
+            };
+          } else {
+            throw new AuthenticationError("Incorrect Password");
+          }
+        } else {
+          throw new AuthenticationError("Incorrect Username");
+        }
+      } catch (error) {
+        return { message: error };
+      }
+    },
+
+    adminEditOrderStatus: async (_, { orderId, newStatus, restaurantId }) => {
+      try {
+        const restaurant = await Resturant.findById(restaurantId);
+        if (!restaurant) {
+          throw new Error("Restaurant not found.");
+        }
+
+        const order = await Order.findOne({
+          _id: orderId,
+          "orderItems.restaurantName": restaurant.name,
+        });
+
+        if (!order) {
+          throw new Error("Order not found."); // Handle case where order is not found
+        }
+        order.orderItems.forEach((item) => {
+          if (item.restaurantName === restaurant.name) {
+            item.status = newStatus;
+          }
+        });
+
+        order.markModified("orderItems");
+
+        await order.save();
+        return order;
+      } catch (error) {
+        console.error("Error updating order status:", error);
+        throw new Error("Failed to update order status."); // Throw an error to be handled by the GraphQL layer
+      }
+    },
+
+    adminEditRestaurantStatus: async (_, { restaurantId, newStatus }) => {
+      try {
+        const updatedUser = await Resturant.findByIdAndUpdate(restaurantId, {
+          status: newStatus,
+        });
+        return updatedUser;
+      } catch (error) {
+        return { message: error };
+      }
+    },
+    adminDeleteRestaurant: async (_, { id }) => {
+      try {
+        const deletedRestaurant = await Resturant.findByIdAndDelete(id);
+        return deletedRestaurant;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to delete restaurant");
+      }
+    },
+
+    adminEditUser: async (_, { newStatus, userId }) => {
+      try {
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+          status: newStatus,
+        });
+        return updatedUser;
+      } catch (error) {
+        return { message: error };
+      }
+    },
+
+    adminDeleteUser: async (_, { id }) => {
+      try {
+        const deletedUser = await User.findByIdAndDelete(id);
+        return deletedUser;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to delete user");
       }
     },
   },

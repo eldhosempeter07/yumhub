@@ -89,6 +89,7 @@ export const GET_RESTAURANTS = gql`
       location
       image
       email
+      status
     }
   }
 `;
@@ -143,7 +144,6 @@ export const RESTAURANT_ORDERS = gql`
       tax
       instructions
       totalAmount
-      restaurantId
       orderItems {
         status
         restaurantId
@@ -177,7 +177,6 @@ export const RESTAURANT_ORDER_BY_ID = gql`
       tax
       instructions
       totalAmount
-      restaurantId
       orderItems {
         restaurantId
         restaurantName
@@ -211,7 +210,6 @@ export const EDIT_ORDER_STATUS = gql`
       tax
       instructions
       totalAmount
-      restaurantId
       orderItems {
         restaurantId
         restaurantName

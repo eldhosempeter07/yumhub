@@ -1,4 +1,5 @@
 import firebase from "firebase/compat/app";
+import { jwtDecode } from "jwt-decode";
 import "firebase/storage";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
@@ -46,5 +47,17 @@ export const getImageUrl = async (fileName) => {
   } catch (error) {
     console.error("Error fetching download URL:", error);
     return null;
+  }
+};
+
+export const isTokenExpired = (token) => {
+  if (!token) return true;
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp < currentTime;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return true;
   }
 };

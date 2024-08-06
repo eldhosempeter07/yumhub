@@ -2,28 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { Form, Button, Container, Col, Row, Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import AdminSideNav from "../../components/AdminSideNav";
 import {
-  RESTAURANT_ORDER_BY_ID,
-  EDIT_ORDER_STATUS,
-  RESTAURANT_ORDERS,
-} from "../../services/graphql/restaurant";
-import SideNavbar from "../../components/SideNavbar";
+  ADMIN_EDIT_ORDER_STATUS,
+  ADMIN_RESTAURANT_ORDER_BY_ID,
+} from "../../services/graphql/admin";
 
-const RestaurantEditOrder = () => {
-  const { id } = useParams();
+const AdminEditOrder = () => {
+  const { id, resId } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [status, setStatus] = useState("");
 
-  const { data, loading, error } = useQuery(RESTAURANT_ORDER_BY_ID, {
-    variables: { id },
+  const { data, loading, error } = useQuery(ADMIN_RESTAURANT_ORDER_BY_ID, {
+    variables: { id, restaurantId: resId },
   });
 
-  const [editOrderStatus] = useMutation(EDIT_ORDER_STATUS, {
+  const [adminEditOrderStatus] = useMutation(ADMIN_EDIT_ORDER_STATUS, {
     onCompleted: () => {
-      navigate("/restaurant-orders");
+      navigate("/admin/orders");
     },
-    refetchQueries: [{ query: RESTAURANT_ORDERS }],
+    refetchQueries: [{ query: ADMIN_RESTAURANT_ORDER_BY_ID }],
     onError: (error) => {
       console.error("Error updating order status:", error);
     },
@@ -31,17 +30,18 @@ const RestaurantEditOrder = () => {
 
   useEffect(() => {
     if (data) {
-      setOrder(data.restaurantOrderById);
-      setStatus(data.restaurantOrderById.status);
+      setOrder(data.adminRestaurantOrderById);
+      setStatus(data.adminRestaurantOrderById?.orderItems[0]?.status);
     }
   }, [data]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editOrderStatus({
+    adminEditOrderStatus({
       variables: {
         orderId: id,
         newStatus: status,
+        restaurantId: resId,
       },
     });
   };
@@ -56,8 +56,8 @@ const RestaurantEditOrder = () => {
 
   return (
     <Row className="restaurant-row">
-      <Col lg={2} className="bg-dark">
-        <SideNavbar />
+      <Col lg={2} className="admin-nav">
+        <AdminSideNav />
       </Col>
       <Col lg={8}>
         <div className="mx-4">
@@ -107,7 +107,7 @@ const RestaurantEditOrder = () => {
               >
                 <option value="Pending">Pending</option>
                 <option value="Pick Up">Pick Up</option>
-                <option value="Decline">Decline</option>
+                <option value="Declined">Declined</option>
               </Form.Control>
             </Form.Group>
 
@@ -121,4 +121,4 @@ const RestaurantEditOrder = () => {
   );
 };
 
-export default RestaurantEditOrder;
+export default AdminEditOrder;
