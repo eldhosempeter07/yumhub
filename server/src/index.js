@@ -45,10 +45,9 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
     cache: "bounded",
   });
 
-  await server.start(); // Ensure the server is started before applying middleware
+  await server.start();
   server.applyMiddleware({ app });
 
-  // Ensure that the MONGO_URI is defined
   const MONGO_URI = process.env.MONGO_URI;
   if (!MONGO_URI) {
     throw new Error("MongoDB URI is not defined");
@@ -58,8 +57,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
     await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // Adjust the timeout here
-      socketTimeoutMS: 45000, // Adjust the socket timeout here
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
     });
     console.log("Connected to MongoDB");
   } catch (error) {
@@ -123,6 +122,12 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
       console.error("Error uploading file to Firebase Storage:", error);
       res.status(500).json({ error: "Failed to upload file." });
     }
+  });
+
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
   });
 
   const port = process.env.PORT || 4000;
