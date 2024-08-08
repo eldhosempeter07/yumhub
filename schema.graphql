@@ -1,0 +1,426 @@
+type Timing {
+  day: String!
+  open: String!
+  close: String!
+}
+
+type MenuItem {
+  id: String
+  name: String!
+  description: String
+  price: Float!
+  category: String!
+  imageURL: String
+  rating: String
+  restaurantId: String
+}
+
+input MenuItemInput {
+  id: String
+  name: String!
+  description: String!
+  price: Float!
+  category: String!
+  imageURL: String
+  rating: String
+}
+
+type Restaurant {
+  id: ID!
+  name: String!
+  image: String
+  phone: String
+  status: String
+  location: String
+  type: String
+  menu: [MenuItem]
+  timing: [Timing]
+  email: String
+}
+
+input TimingInput {
+  day: String!
+  open: String!
+  close: String!
+}
+
+input MenuItemInput {
+  name: String!
+  description: String
+  price: Float!
+  category: String!
+  imageURL: String
+  rating: String
+}
+
+input CreateRestaurantInput {
+  name: String!
+  email: String!
+  image: String
+  type: String
+  phone: String
+  location: String
+  password: String
+  menu: [MenuItemInput]
+  timing: [TimingInput]
+}
+
+# User
+
+type User {
+  name: String!
+  email: String!
+}
+
+type UserProfile {
+  _id: String
+  email: String
+  phone: String
+  name: String
+  status: String
+}
+
+input UserProfileInput {
+  email: String!
+  phone: String
+  name: String
+}
+
+input UserInput {
+  name: String
+  email: String!
+  password: String!
+}
+
+input UserLoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginData {
+  user: User
+  token: String
+  message: String
+  type: String
+}
+
+# Cart
+
+type CartItem {
+  id: String!
+  count: Int!
+  price: Float!
+  name: String!
+  description: String
+  imageURL: String
+  category: String!
+}
+
+type CartRestaurant {
+  items: [CartItem]
+  restaurantId: String
+  total: String
+  totalCount: Int
+  restaurantName: String
+}
+
+input CartItemInput {
+  id: String
+  count: Int
+}
+
+type Cart {
+  userId: String
+  cartItems: [CartRestaurant]
+  totalCount: Int
+  total: Float
+  restaurantId: String
+}
+
+input CartInput {
+  restaurantId: String!
+  item: CartItemInput!
+}
+
+# Favourite
+
+type FavouriteItem {
+  id: String
+  price: Float!
+  name: String!
+  description: String
+  imageURL: String
+  category: String!
+  restaurantId: String
+  itemId: String
+}
+
+type Favourite {
+  userId: String
+  itemId: [FavouriteItem]
+  totalCount: Int
+}
+
+input FavouriteInput {
+  restaurantId: String
+  itemId: String
+}
+
+input PaymentInput {
+  cardNumber: String!
+  expiry: String!
+  securityCode: String!
+  country: String!
+  zipCode: String!
+  nickName: String
+  primary: Boolean
+}
+type Payment {
+  id: String
+  cardNumber: String!
+  expiry: String!
+  securityCode: String!
+  country: String!
+  zipCode: String!
+  nickName: String
+  primary: Boolean
+}
+
+input AddressInput {
+  id: String
+  street: String
+  city: String
+  state: String
+  zipCode: String
+  country: String
+  name: String
+  primary: Boolean
+}
+
+input UpdateAddressInput {
+  userId: String
+  street: String
+  city: String
+  state: String
+  zipCode: String
+  country: String
+  name: String
+  primary: Boolean
+  id: String
+}
+
+type Address {
+  id: String
+  street: String
+  city: String
+  state: String
+  zipCode: String
+  country: String
+  name: String
+  primary: Boolean
+}
+
+# Checkout
+
+type Order {
+  _id: String
+  userId: String
+  addressId: String
+  paymentId: String
+  promoCode: String
+  subTotal: String
+  deliveryFee: String
+  orderItems: [CheckoutItem]
+  tax: String
+  totalAmount: String
+  instructions: String
+}
+
+input CItemInput {
+  id: String!
+  count: Int!
+  price: Float!
+  name: String!
+  description: String
+  imageURL: String
+  category: String!
+}
+
+input CheckoutItemInput {
+  items: [CItemInput]
+  restaurantId: String
+  total: String
+  totalCount: Int
+  restaurantName: String
+  status: String
+}
+
+type CheckoutItem {
+  items: [CartItem]
+  restaurantId: String
+  total: String
+  totalCount: Int
+  restaurantName: String
+  status: String
+}
+
+input OrderInput {
+  addressId: String
+  paymentId: String
+  promoCode: String
+  subTotal: String
+  deliveryFee: String
+  tax: String
+  instructions: String
+  totalAmount: String
+  restaurantId: String
+  orderItems: [CheckoutItemInput]
+}
+
+input EditOrderInput {
+  id: String
+  userId: String
+  addressId: String
+  paymentId: String
+  promoCode: String
+  subTotal: String
+  deliveryFee: String
+  tax: String
+  instructions: String
+  totalAmount: String
+  restaurantId: String
+  orderItems: [CheckoutItemInput]
+  status: String
+}
+
+input RestaurantFilter {
+  search: String
+  category: [String]
+}
+
+type OrderBarChart {
+  order: Int
+  day: Int
+}
+
+type RestaurantTiming {
+  id: String
+  day: String
+  start: String
+  end: String
+  holiday: Boolean
+  restaurantId: String!
+}
+
+input RestaurantTimingInput {
+  day: String
+  start: String
+  end: String
+  holiday: Boolean
+}
+
+input UpdateRestaurantTimingInput {
+  id: ID!
+  day: String
+  start: String
+  end: String
+  holiday: Boolean
+  restaurantId: String
+}
+
+input TimingByDayInput {
+  day: String
+  id: String
+}
+
+type Query {
+  orders: [Order]!
+  foodItems: [MenuItem]!
+  foodItemsByRestaurant(id: String): [MenuItem]!
+  restaurant(filter: RestaurantFilter): [Restaurant!]!
+  restaurantById(id: String): Restaurant!
+  restaurantByEmail(email: String): Restaurant!
+  userInfo: UserProfile!
+  cart: Cart
+  address: [Address]
+  addressById(id: String): Address
+  payment: [Payment]
+  favourite: Favourite
+  getRestaurantTimingByDay(timing: TimingByDayInput): RestaurantTiming
+
+  # Restaurant
+  restaurantOrders: [Order]
+  restaurantOrderById(id: String): Order
+  restaurantItems: [MenuItem]
+  restaurantItemById(id: String): MenuItem
+
+  restaurantMonthlyOrders: [OrderBarChart]
+
+  getRestaurantTimings: [RestaurantTiming!]!
+  getRestaurantTiming(id: ID!): RestaurantTiming
+
+  restaurantInfo: Restaurant!
+
+  # Super Admin
+
+  restaurants: [Restaurant]
+  users: [UserProfile]
+  adminOrders: [Order]
+  adminRestaurantOrderById(id: String, restaurantId: String): Order
+  adminRestaurantInfo(id: String): Restaurant!
+
+  adminUserInfo(id: String): UserProfile!
+  adminMonthlyOrders: [OrderBarChart]
+}
+
+type Mutation {
+  # User
+  addToCart(cartItems: CartInput!): Cart
+  emptyCart: Cart
+  deleteCartItem(itemId: String!): Cart
+
+  addAddress(address: AddressInput!): Address
+  updateAddress(address: UpdateAddressInput): Address
+  deleteAddress(addressId: String!): Address
+
+  addPayment(payment: PaymentInput!): Payment
+  addToFavourite(favouriteItems: FavouriteInput!): Favourite
+  createOrder(order: OrderInput!): Order
+
+  registerUser(user: UserInput): User
+  loginUser(user: UserLoginInput): LoginData
+  updateUser(user: UserProfileInput): UserProfile
+
+  # Restaurant
+
+  restaurantLogin(restaurant: UserLoginInput!): LoginData!
+  createRestaurant(restaurant: CreateRestaurantInput!): Restaurant!
+  updateRestaurant(user: CreateRestaurantInput): Restaurant
+
+  addFoodItem(menuItem: MenuItemInput!): MenuItem
+  editFoodItem(menuItem: MenuItemInput!): MenuItem
+  deleteFoodItem(id: String!): MenuItem
+
+  editOrderStatus(orderId: ID!, newStatus: String!): Order
+
+  addRestaurantTiming(timing: RestaurantTimingInput!): RestaurantTiming!
+  updateRestaurantTiming(
+    timing: UpdateRestaurantTimingInput!
+  ): RestaurantTiming!
+  deleteRestaurantTiming(id: ID!): Boolean!
+
+  # Super Admin
+
+  adminLogin(user: UserLoginInput): LoginData
+  adminEditOrderStatus(
+    orderId: ID!
+    newStatus: String!
+    restaurantId: String!
+  ): Order
+
+  adminEditRestaurantStatus(restaurantId: ID!, newStatus: String!): Restaurant
+  adminDeleteRestaurant(id: ID!): Restaurant!
+
+  adminEditUser(newStatus: String!, userId: ID!): UserProfile
+  adminDeleteUser(id: ID!): UserProfile!
+}
