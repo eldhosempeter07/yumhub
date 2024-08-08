@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import SideNavbar from "../../components/SideNavbar";
-import { getImageUrl } from "../../utils/helper";
+import { getBackendUrl, getImageUrl } from "../../utils/helper";
 import {
   RESTAURANT_INFO,
   UPDATE_RESTAURANT,
@@ -94,8 +94,9 @@ const RestaurantProfile = () => {
   const handleImageChange = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
+    const backendUrl = getBackendUrl();
     try {
-      const response = await fetch("http://localhost:4000/upload", {
+      const response = await fetch(`${backendUrl}/upload`, {
         method: "POST",
         body: formData,
       });

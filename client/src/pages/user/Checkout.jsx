@@ -20,6 +20,7 @@ import {
 } from "../../services/graphql/auth";
 import { useMutation, useQuery } from "@apollo/client";
 import CartItems from "../../components/CartItems";
+import { getBackendUrl } from "../../utils/helper";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -87,8 +88,10 @@ const Checkout = () => {
     }
   };
 
+  const backendUrl = getBackendUrl();
+
   const handleCheckout = () => {
-    fetch("http://localhost:4000/create-checkout-session", {
+    fetch(`${backendUrl}/create-checkout-session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

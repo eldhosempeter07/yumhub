@@ -7,6 +7,7 @@ import {
   ADD_FOOD_ITEM,
   RESTAURANT_ITEMS,
 } from "../../services/graphql/restaurant";
+import { getBackendUrl } from "../../utils/helper";
 
 const types = [
   { id: 1, name: "Indian" },
@@ -48,8 +49,9 @@ const RestaurantAddItems = () => {
   const handleImageChange = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
+    const backendUrl = getBackendUrl();
     try {
-      const response = await fetch("http://localhost:4000/upload", {
+      const response = await fetch(`${backendUrl}/upload`, {
         method: "POST",
         body: formData,
       });

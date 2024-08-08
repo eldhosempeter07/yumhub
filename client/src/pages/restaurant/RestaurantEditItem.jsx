@@ -18,6 +18,7 @@ import {
 } from "../../services/graphql/restaurant";
 import SideNavbar from "../../components/SideNavbar";
 import { useNavigate, useParams } from "react-router-dom";
+import { getBackendUrl } from "../../utils/helper";
 
 const RestaurantEditItem = () => {
   const [item, setItem] = useState({
@@ -69,8 +70,10 @@ const RestaurantEditItem = () => {
   const handleImageChange = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
+    const backendUrl = getBackendUrl();
+
     try {
-      const response = await fetch("http://localhost:4000/upload", {
+      const response = await fetch(`${backendUrl}/upload`, {
         method: "POST",
         body: formData,
       });
