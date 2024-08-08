@@ -13,7 +13,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
-const backendURL = "http://localhost:4000/graphql";
+const backendURL = `http://localhost:${process.env.PORT || 4000}/graphql`;
 
 const httpLink = createUploadLink({
   uri: backendURL,
