@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import UserLoginPage from "./pages/user/UserLoginPage";
-// import AdminLoginPage from "./pages/AdminLoginPage";
 import RestaurantLoginPage from "./pages/restaurant/RestaurantLoginPage";
 import RestaurantRegisterPage from "./pages/restaurant/RestaurantRegisterPage";
 import UserRegisterPage from "./pages/user/UserRegisterPage";
@@ -46,6 +45,7 @@ import AdminEditOrder from "./pages/admin/AdminEditOrder";
 import AdminEditRestaurant from "./pages/admin/AdminEditRestaurant";
 import AdminEditUser from "./pages/admin/AdminEditUser";
 import AdminProtectedRoute from "./services/adminProtetedRoute";
+import RootRoute from "./services/rootRoute";
 
 const App = () => {
   const { loading, data } = useQuery(CART);
@@ -53,7 +53,21 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <RootRoute element={<HomePage />} />
+            </Suspense>
+          }
+        />
+        {/* <Route path="/" element={<HomePage />} /> */}
         <Route path="/login" element={<UserLoginPage />} />
         <Route path="/register" element={<UserRegisterPage />} />
         <Route path="/admin">

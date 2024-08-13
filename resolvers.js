@@ -498,6 +498,11 @@ const resolvers = {
           email: restaurant?.email,
         });
 
+        if (loginRestaurant.status !== "Approved") {
+          return {
+            message: `Your Account Status is ${loginRestaurant.status}`,
+          };
+        }
         if (loginRestaurant != null) {
           const password = await verifyPassword(
             restaurant.password,
@@ -545,6 +550,9 @@ const resolvers = {
     loginUser: async (_, { user }) => {
       try {
         const loginUser = await User.findOne({ email: user?.email });
+        if (loginUser.status !== "Approved") {
+          return { message: `Your Account Status is ${loginUser.status}` };
+        }
         if (loginUser != null) {
           const password = await verifyPassword(
             user.password,

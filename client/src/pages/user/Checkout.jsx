@@ -146,7 +146,7 @@ const Checkout = () => {
                   </Accordion.Header>
                   <Accordion.Body>
                     {addressData?.address?.map((addData) => (
-                      <div key={addData?.id} className="mx-4 py-5">
+                      <div key={addData?.id} className=" pt-5">
                         <h5>{addData?.street},</h5>
                         <h5 className="text-secondary">
                           {addData?.city}, {addData?.state}, {addData?.country},{" "}

@@ -169,7 +169,7 @@ const RestaurantDetails = () => {
 
           {/* Menu */}
           <div>
-            <h5>Menu</h5>
+            <h5 className="fw-bold mb-3">Menu</h5>
             <div className="d-flex menu-container flex-wrap">
               {foodItemsData?.foodItemsByRestaurant?.map((item) => (
                 <MenuItems

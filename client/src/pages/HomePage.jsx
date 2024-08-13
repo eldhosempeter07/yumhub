@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import burgerImage from "../styles/images/burger.jpg";
-import logoMainImage from "../styles/images/logoMain.jpg";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import Navbar from "../components/navbar";
 import YumCard from "../components/YumCard";
 import { useMutation, useQuery } from "@apollo/client";
@@ -8,7 +6,7 @@ import {
   GET_FOOD_ITEMS,
   GET_RESTAURANTS,
 } from "../services/graphql/restaurant";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Alert, Spinner } from "react-bootstrap";
 import MenuItems from "../components/MenuItems";
 import {
@@ -19,6 +17,12 @@ import {
 } from "../services/graphql/auth";
 import { getImageUrl } from "../utils/helper";
 const HomePage = () => {
+  const location = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const { data, error, loading } = useQuery(GET_FOOD_ITEMS);
   const {
     data: restaurantData,

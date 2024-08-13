@@ -14,6 +14,9 @@ const UserLogin = () => {
   const navigate = useNavigate();
   const [RestaurantLogin] = useMutation(LOGIN_RESTAURANT, {
     onCompleted: (data) => {
+      if (data.restaurantLogin?.message?.includes("Your Account Status")) {
+        return setError(data.restaurantLogin?.message);
+      }
       localStorage.setItem("token", data.restaurantLogin.token);
       localStorage.setItem("name", data.restaurantLogin?.user?.name);
       localStorage.setItem("type", data.restaurantLogin?.type);

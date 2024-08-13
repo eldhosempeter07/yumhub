@@ -13,6 +13,9 @@ const UserLogin = () => {
   const navigate = useNavigate();
   const [loginUser] = useMutation(LOGIN_USER, {
     onCompleted: (data) => {
+      if (data.loginUser?.message?.includes("Your Account Status")) {
+        return setError(data.loginUser?.message);
+      }
       localStorage.setItem("token", data.loginUser.token);
       localStorage.setItem("name", data.loginUser?.user?.name);
       localStorage.setItem("type", data.loginUser?.type);

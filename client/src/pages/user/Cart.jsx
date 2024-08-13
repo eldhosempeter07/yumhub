@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   ADD_TO_CART,
   CART,
@@ -9,7 +9,7 @@ import {
 import CartItems from "../../components/CartItems";
 import Navbar from "../../components/navbar";
 import { Button, Nav, Row, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CartPopup from "../../components/CartPopup";
 
 const Cart = () => {
@@ -17,6 +17,12 @@ const Cart = () => {
   const [addToCart] = useMutation(ADD_TO_CART, {
     refetchQueries: [{ query: CART }],
   });
+
+  const location = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const [showModal, setShowModal] = useState(false);
 

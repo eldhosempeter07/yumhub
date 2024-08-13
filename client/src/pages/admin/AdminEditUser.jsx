@@ -24,8 +24,6 @@ const AdminEditUser = () => {
     },
   });
 
-  console.log(status);
-
   const [adminEditUser] = useMutation(ADMIN_EDIT_USER, {
     refetchQueries: [{ query: USERS }],
     onCompleted: () => navigate("/admin/users"),

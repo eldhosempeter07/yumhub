@@ -83,8 +83,6 @@ const AdminEditRestaurant = () => {
     );
   if (error) return <p>Error: {error.message}</p>;
 
-  console.log(status);
-
   return (
     <Row className="restaurant-row">
       <Col lg={2} className="admin-nav">
