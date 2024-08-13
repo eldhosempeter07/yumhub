@@ -82,8 +82,15 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
             quantity: item.quantity,
           };
         }),
-        success_url: "http://localhost:3000/success",
-        cancel_url: "http://localhost:3000/checkout",
+
+        success_url:
+          process.env.NODE_ENV === "production"
+            ? "https://yum-hub-683741ba0e1d.herokuapp.com/success"
+            : "http://localhost:3000/success",
+        cancel_url:
+          process.env.NODE_ENV === "production"
+            ? "https://yum-hub-683741ba0e1d.herokuapp.com/checkout"
+            : "http://localhost:3000/checkout",
       });
       res.json({ url: session.url });
     } catch (e) {
