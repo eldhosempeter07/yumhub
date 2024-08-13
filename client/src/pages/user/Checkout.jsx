@@ -10,7 +10,7 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ADDRESS,
   CART,
@@ -135,46 +135,54 @@ const Checkout = () => {
           <Card className="border my-4 py-5 px-4 rounded-4 bg-white">
             <Card.Body>
               <h4 className="fw-bold">Delivery details</h4>
-
-              <Accordion>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>
-                    <h2 className="fw-bold text-secondary">
-                      <i className="bi bi-cart4"></i>
-                    </h2>
-                    <h5 className="mt-2 mx-4">Address</h5>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    {addressData?.address?.map((addData) => (
-                      <div key={addData?.id} className=" pt-5">
-                        <h5>{addData?.street},</h5>
-                        <h5 className="text-secondary">
-                          {addData?.city}, {addData?.state}, {addData?.country},{" "}
-                          {addData?.zipCode}
-                        </h5>
-                        {!addData?.primary ? (
-                          <Form.Group className="mb-3">
-                            <Form.Check
-                              type="checkbox"
-                              id="primary-checkbox"
-                              label="Set As Primary"
-                              name="primary"
-                              onChange={(event) =>
-                                handleInputChange(event, addData)
-                              }
-                            />
-                          </Form.Group>
-                        ) : (
-                          <Badge className="mb-2" bg="success">
-                            Primary
-                          </Badge>
-                        )}
-                        <p className="border-top border-4"></p>
-                      </div>
-                    ))}
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
+              {addressData?.address?.length == 0 ? (
+                <Link
+                  to="/address"
+                  className="text-decoration-none fs-5 text-success text-uppercase mx-3"
+                >
+                  Add Address
+                </Link>
+              ) : (
+                <Accordion>
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>
+                      <h2 className="fw-bold text-secondary">
+                        <i className="bi bi-cart4"></i>
+                      </h2>
+                      <h5 className="mt-2 mx-4">Address</h5>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      {addressData?.address?.map((addData) => (
+                        <div key={addData?.id} className=" pt-5">
+                          <h5>{addData?.street},</h5>
+                          <h5 className="text-secondary">
+                            {addData?.city}, {addData?.state},{" "}
+                            {addData?.country}, {addData?.zipCode}
+                          </h5>
+                          {!addData?.primary ? (
+                            <Form.Group className="mb-3">
+                              <Form.Check
+                                type="checkbox"
+                                id="primary-checkbox"
+                                label="Set As Primary"
+                                name="primary"
+                                onChange={(event) =>
+                                  handleInputChange(event, addData)
+                                }
+                              />
+                            </Form.Group>
+                          ) : (
+                            <Badge className="mb-2" bg="success">
+                              Primary
+                            </Badge>
+                          )}
+                          <p className="border-top border-4"></p>
+                        </div>
+                      ))}
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              )}
 
               <p className="border-top border-1"></p>
 

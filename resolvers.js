@@ -658,7 +658,6 @@ const resolvers = {
         restaurantId: restaurantId,
       });
       if (cart == null && restaurantId != null) {
-        // await Cart.deleteMany({});
         cart = new Cart({
           userId: user?.email,
           restaurantId: restaurantId,
@@ -780,12 +779,18 @@ const resolvers = {
       });
 
       if (!favourite) {
-        favourite.userId = user.email;
-        favourite = new Favourite(favouriteItems);
+        favourite = new Favourite({
+          userId: user.email,
+          itemId: [favouriteItems.itemId],
+        });
       } else {
+        if (!Array.isArray(favourite.itemId)) {
+          favourite.itemId = [];
+        }
         favourite.itemId = [...favourite.itemId, favouriteItems.itemId];
-        favourite.markModified("items");
+        favourite.markModified("itemId");
       }
+
       await favourite.save();
 
       return favourite;
