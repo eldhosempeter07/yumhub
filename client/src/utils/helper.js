@@ -64,6 +64,6 @@ export const isTokenExpired = (token) => {
 
 export const getBackendUrl = () => {
   return process.env.NODE_ENV === "production"
-    ? "https://yum-hub-683741ba0e1d.herokuapp.com/graphql"
-    : "http://localhost:4000/graphql";
+    ? "https://yum-hub-683741ba0e1d.herokuapp.com"
+    : "http://localhost:4000";
 };

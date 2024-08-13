@@ -370,7 +370,7 @@ type Query {
   adminRestaurantInfo(id: String): Restaurant!
 
   adminUserInfo(id: String): UserProfile!
-  adminMonthlyOrders: [OrderBarChart]
+  adminMonthlyOrders(monthName: String): [OrderBarChart]
 }
 
 type Mutation {

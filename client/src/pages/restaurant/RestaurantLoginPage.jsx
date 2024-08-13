@@ -32,6 +32,10 @@ const UserLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (email == "" || password == "") {
+      return setError("All fields are required");
+    }
+    setError("");
     client.resetStore();
     try {
       await RestaurantLogin({ variables: { restaurant: { email, password } } });
@@ -48,7 +52,7 @@ const UserLogin = () => {
           <form onSubmit={handleSubmit}>
             <h3>Login</h3>
             <input
-              type="email"
+              type="text"
               placeholder="Email"
               value={email}
               name="email"

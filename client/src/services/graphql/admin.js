@@ -223,8 +223,8 @@ export const ADMIN_USER_INFO = gql`
 `;
 
 export const ADMIN_MONTHLY_ORDERS = gql`
-  query AdminMonthlyOrders {
-    adminMonthlyOrders {
+  query AdminMonthlyOrders($monthName: String) {
+    adminMonthlyOrders(monthName: $monthName) {
       order
       day
     }

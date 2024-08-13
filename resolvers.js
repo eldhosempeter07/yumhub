@@ -438,18 +438,74 @@ const resolvers = {
       }
     },
 
-    adminMonthlyOrders: async () => {
+    // adminMonthlyOrders: async () => {
+    //   const currentDate = new Date();
+    //   const startDate = new Date(
+    //     currentDate.getFullYear(),
+    //     currentDate.getMonth(),
+    //     1
+    //   );
+    //   const endDate = new Date(
+    //     currentDate.getFullYear(),
+    //     currentDate.getMonth() + 1,
+    //     0
+    //   );
+
+    //   const orders = await Order.find({
+    //     createdAt: {
+    //       $gte: startDate,
+    //       $lte: endDate,
+    //     },
+    //   });
+
+    //   const dailyOrders = Array(31).fill(0);
+
+    //   orders.forEach((order) => {
+    //     const orderDate = order.createdAt;
+    //     if (
+    //       orderDate.getMonth() === currentDate.getMonth() &&
+    //       orderDate.getFullYear() === currentDate.getFullYear()
+    //     ) {
+    //       dailyOrders[orderDate.getDate() - 1] += 1;
+    //     }
+    //   });
+    //   const day = Array.from({ length: 32 }, (_, index) => index + 1);
+
+    //   const result = dailyOrders.map((order, index) => ({
+    //     order,
+    //     day: day[index],
+    //   }));
+
+    //   return result;
+    // },
+
+    adminMonthlyOrders: async (_, { monthName }) => {
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      const monthIndex = monthNames.indexOf(monthName);
+
+      if (monthIndex === -1) {
+        throw new Error("Invalid month name provided.");
+      }
+
       const currentDate = new Date();
-      const startDate = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        1
-      );
-      const endDate = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 1,
-        0
-      );
+      const startDate = new Date(currentDate.getFullYear(), monthIndex, 1);
+      const endDate = new Date(currentDate.getFullYear(), monthIndex + 1, 0);
+
+      const daysInMonth = endDate.getDate();
 
       const orders = await Order.find({
         createdAt: {
@@ -458,18 +514,19 @@ const resolvers = {
         },
       });
 
-      const dailyOrders = Array(31).fill(0);
+      const dailyOrders = Array(daysInMonth).fill(0);
 
       orders.forEach((order) => {
         const orderDate = order.createdAt;
         if (
-          orderDate.getMonth() === currentDate.getMonth() &&
+          orderDate.getMonth() === monthIndex &&
           orderDate.getFullYear() === currentDate.getFullYear()
         ) {
           dailyOrders[orderDate.getDate() - 1] += 1;
         }
       });
-      const day = Array.from({ length: 32 }, (_, index) => index + 1);
+
+      const day = Array.from({ length: daysInMonth }, (_, index) => index + 1);
 
       const result = dailyOrders.map((order, index) => ({
         order,
@@ -498,12 +555,12 @@ const resolvers = {
           email: restaurant?.email,
         });
 
-        if (loginRestaurant.status !== "Approved") {
-          return {
-            message: `Your Account Status is ${loginRestaurant.status}`,
-          };
-        }
         if (loginRestaurant != null) {
+          if (loginRestaurant.status !== "Approved") {
+            return {
+              message: `Your Account Status is ${loginRestaurant.status}`,
+            };
+          }
           const password = await verifyPassword(
             restaurant.password,
             loginRestaurant.password
@@ -550,10 +607,11 @@ const resolvers = {
     loginUser: async (_, { user }) => {
       try {
         const loginUser = await User.findOne({ email: user?.email });
-        if (loginUser.status !== "Approved") {
-          return { message: `Your Account Status is ${loginUser.status}` };
-        }
+
         if (loginUser != null) {
+          if (loginUser.status !== "Approved") {
+            return { message: `Your Account Status is ${loginUser.status}` };
+          }
           const password = await verifyPassword(
             user.password,
             loginUser.password
@@ -865,6 +923,7 @@ const resolvers = {
       try {
         const loginAdmin = await User.findOne({
           email: user?.email,
+          name: "Admin",
         });
 
         if (loginAdmin != null) {

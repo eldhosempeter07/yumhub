@@ -74,16 +74,6 @@ function OrderCard({ order }) {
                       </Card>
                     </div>
                   ))}
-                  <h3 className="text-end mx-2 my-3 fw-bold">
-                    Total{" "}
-                    <span>
-                      {(
-                        parseFloat(subTotal) +
-                        parseFloat(deliveryFee) +
-                        parseFloat(tax)
-                      ).toFixed(2)}
-                    </span>
-                  </h3>
                 </div>
               ))}
           </div>

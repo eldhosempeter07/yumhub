@@ -31,6 +31,10 @@ const UserLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (email == "" || password == "") {
+      return setError("All fields are required");
+    }
+    setError("");
     client.resetStore();
     try {
       await loginUser({ variables: { user: { email, password } } });
