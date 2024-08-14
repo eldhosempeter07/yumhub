@@ -10,7 +10,7 @@ const Navbar = () => {
   const isAuthenticated = !!localStorage.getItem("token");
   const type = localStorage.getItem("type");
   const userId = localStorage.getItem("userId");
-  const { data: cartData } = useQuery(CART);
+  const { data: cartData, refetch: refetchCart } = useQuery(CART);
   const { data: notificationsData, refetch: refetchNotifications } = useQuery(
     GET_NOTIFICATIONS,
     {
@@ -21,6 +21,7 @@ const Navbar = () => {
   useEffect(() => {
     if (isAuthenticated) {
       refetchNotifications();
+      refetchCart();
     }
   }, [isAuthenticated]);
   const navigate = useNavigate();

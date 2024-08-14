@@ -51,9 +51,6 @@ import NotificationsPage from "./pages/user/NotificationPage";
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("token");
   const type = localStorage.getItem("type");
-  const { loading, data } = useQuery(CART, {
-    skip: !isAuthenticated || type != "user",
-  });
 
   return (
     <Router>
@@ -246,10 +243,6 @@ const App = () => {
                 </div>
               }
             >
-              {!loading &&
-              (data?.cart == null || data?.cart?.items?.length == 0) ? (
-                <Navigate to="/" />
-              ) : null}
               <ProtectedRoute element={<Checkout />} />
             </Suspense>
           }
