@@ -15,7 +15,10 @@ const NotificationsPage = () => {
         {notificationsData?.notifications.length > 0 ? (
           <div className="list-group d-flex justify-content-center">
             {notificationsData.notifications.map((notification, i) => (
-              <Card className="mx-auto my-4 border border-3 px-4 py-4 my-5 rounded ">
+              <Card
+                className="mx-auto my-4 border border-3 px-4 py-4 my-3 rounded "
+                style={{ minWidth: "800px" }}
+              >
                 <div className="d-flex flex-wrap justify-content-center w-100">
                   <div className="px-0 w-100 mt-4 mx-3">
                     <span className="fw-bold cart-item-name text-success">

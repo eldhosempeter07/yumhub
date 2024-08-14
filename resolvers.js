@@ -220,14 +220,13 @@ const resolvers = {
     notifications: async (_, __, { user }) => {
       try {
         const notifications = await Notification.find({
-          userId: user.email,
+          userId: user?.email,
         }).sort({
           date: -1,
         });
         return notifications;
       } catch (error) {
         console.error("Error fetching notifications:", error);
-        throw new Error("Failed to fetch notifications.");
       }
     },
 

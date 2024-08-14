@@ -11,7 +11,18 @@ const Navbar = () => {
   const type = localStorage.getItem("type");
   const userId = localStorage.getItem("userId");
   const { data: cartData } = useQuery(CART);
-  const { data: notificationsData } = useQuery(GET_NOTIFICATIONS);
+  const { data: notificationsData, refetch: refetchNotifications } = useQuery(
+    GET_NOTIFICATIONS,
+    {
+      skip: !isAuthenticated,
+    }
+  );
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refetchNotifications();
+    }
+  }, [isAuthenticated]);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -127,6 +138,7 @@ const Navbar = () => {
                       backgroundColor: "#fff",
                       zIndex: 1000,
                       color: "#333",
+                      minHeight: "300px",
                     }}
                   >
                     {notificationsData?.notifications.length > 0 ? (
@@ -157,7 +169,12 @@ const Navbar = () => {
                           </div>
                         ))
                     ) : (
-                      <div className="dropdown-item">No Notifications</div>
+                      <div
+                        className="dropdown-item d-flex justify-content-center align-items-center text-dark text-center"
+                        style={{ minHeight: "300px" }}
+                      >
+                        No Notifications
+                      </div>
                     )}
                     {notificationsData?.notifications.length == 0 ? null : (
                       <div
