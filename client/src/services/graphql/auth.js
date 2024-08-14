@@ -74,13 +74,7 @@ export const CART = gql`
 export const EMPTY_CART = gql`
   mutation EmptyCart {
     emptyCart {
-      userId
-      restaurantId
-      items {
-        id
-        count
-      }
-      totalCount
+      message
     }
   }
 `;
@@ -203,9 +197,9 @@ export const FAVOURITE = gql`
   query Favourite {
     favourite {
       userId
-      itemId {
+      items {
         restaurantId
-        itemId
+        _id
         name
         description
         price
@@ -221,8 +215,32 @@ export const ADD_TO_FAVOURITE = gql`
   mutation AddToFavourite($favouriteItems: FavouriteInput!) {
     addToFavourite(favouriteItems: $favouriteItems) {
       userId
-      itemId {
+      items {
         restaurantId
+        _id
+        name
+        description
+        price
+        imageURL
+        category
+      }
+      totalCount
+    }
+  }
+`;
+
+export const REMOVE_FROM_FAVOURITE = gql`
+  mutation RemoveFromFavourite($itemId: String) {
+    removeFromFavourite(itemId: $itemId) {
+      userId
+      items {
+        restaurantId
+        _id
+        name
+        description
+        price
+        imageURL
+        category
       }
       totalCount
     }

@@ -38,7 +38,7 @@ const resolvers = {
       const favouriteItems = await Item.find({
         _id: { $in: ids },
       });
-      favourite.itemId = favouriteItems;
+      favourite.items = favouriteItems;
       return favourite;
     },
     restaurant: async (_, { filter }) => {
@@ -796,10 +796,31 @@ const resolvers = {
       return favourite;
     },
 
+    removeFromFavourite: async (_, { itemId }, { user }) => {
+      try {
+        let favourite = await Favourite.findOne({ userId: user.email });
+
+        if (favourite) {
+          favourite.itemId = favourite.itemId.filter((id) => id !== itemId);
+          favourite.markModified("itemId");
+          await favourite.save();
+
+          return favourite;
+        } else {
+          return { message: "No favourite list found for this user" };
+        }
+      } catch (error) {
+        console.log(error);
+        return {
+          message: "Error occurred while removing item from favourites",
+        };
+      }
+    },
+
     emptyCart: async (_, __, { user }) => {
       try {
-        const cart = Cart.deleteOne({ userId: user.email });
-        return cart;
+        const cart = await Cart.findOneAndDelete({ userId: user.email });
+        return { message: "Empty Cart" };
       } catch (error) {
         console.log(error);
       }

@@ -152,17 +152,21 @@ type FavouriteItem {
   imageURL: String
   category: String!
   restaurantId: String
-  itemId: String
+  _id: String
 }
 
 type Favourite {
   userId: String
-  itemId: [FavouriteItem]
+  items: [FavouriteItem]
   totalCount: Int
 }
 
 input FavouriteInput {
   restaurantId: String
+  itemId: String
+}
+
+input RemoveFavouriteInput {
   itemId: String
 }
 
@@ -312,6 +316,10 @@ type RestaurantTiming {
   restaurantId: String!
 }
 
+type EmptyCart {
+  message: String
+}
+
 input RestaurantTimingInput {
   day: String
   start: String
@@ -376,7 +384,7 @@ type Query {
 type Mutation {
   # User
   addToCart(cartItems: CartInput!): Cart
-  emptyCart: Cart
+  emptyCart: EmptyCart
   deleteCartItem(itemId: String!): Cart
 
   addAddress(address: AddressInput!): Address
@@ -385,6 +393,7 @@ type Mutation {
 
   addPayment(payment: PaymentInput!): Payment
   addToFavourite(favouriteItems: FavouriteInput!): Favourite
+  removeFromFavourite(itemId: String): Favourite
   createOrder(order: OrderInput!): Order
 
   registerUser(user: UserInput): User

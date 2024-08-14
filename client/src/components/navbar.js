@@ -124,30 +124,33 @@ const Navbar = () => {
               Login
             </Nav.Link>
           )}
-
-          <NavDropdown title="Business" className="text-uppercase">
-            <NavDropdown.Item
-              className="text-uppercase"
-              as={Link}
-              to="/restaurant-login"
-            >
-              Login
-            </NavDropdown.Item>
-            <NavDropdown.Item
-              className="text-uppercase"
-              as={Link}
-              to="/restaurant-register"
-            >
-              Signup
-            </NavDropdown.Item>
-          </NavDropdown>
-          <Nav.Link
-            className="text-white text-uppercase"
-            as={Link}
-            to="/admin/login"
-          >
-            Super Admin
-          </Nav.Link>
+          {!isAuthenticated && type !== "user" ? (
+            <>
+              <NavDropdown title="Business" className="text-uppercase">
+                <NavDropdown.Item
+                  className="text-uppercase"
+                  as={Link}
+                  to="/restaurant-login"
+                >
+                  Login
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  className="text-uppercase"
+                  as={Link}
+                  to="/restaurant-register"
+                >
+                  Signup
+                </NavDropdown.Item>
+              </NavDropdown>
+              <Nav.Link
+                className="text-white text-uppercase"
+                as={Link}
+                to="/admin/login"
+              >
+                Super Admin
+              </Nav.Link>
+            </>
+          ) : null}
         </Nav>
       </BootstrapNavbar.Collapse>
     </BootstrapNavbar>

@@ -1,8 +1,8 @@
 import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
 import { getImageUrl } from "../utils/helper";
-function FavouriteCard({ item, imgHeight }) {
-  const { name, category, price, description, imageURL } = item;
+function FavouriteCard({ item, imgHeight, handleDeleteFavoriteItem }) {
+  const { name, category, price, description, imageURL, _id } = item;
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
@@ -35,6 +35,12 @@ function FavouriteCard({ item, imgHeight }) {
           <div className=" d-flex justify-content-between fw-bold flex-wrap">
             <p className="cart-item my-3">{category}</p>
             <p className="cart-item my-3">$ {price} </p>
+            <p
+              className="cart-item-delete cursor-pointer"
+              onClick={() => handleDeleteFavoriteItem(_id)}
+            >
+              <i className="bi bi-trash3-fill"></i>
+            </p>
           </div>
           <h6 className="fw-bold text-success">{description}</h6>
         </div>

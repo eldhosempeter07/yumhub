@@ -43,6 +43,8 @@ const Cart = () => {
   });
 
   const handleCart = async (item, restaurantId) => {
+    console.log(restaurantId);
+
     await addToCart({
       variables: {
         cartItems: {

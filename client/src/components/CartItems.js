@@ -64,7 +64,7 @@ function CartItems({
                     onClick={() => {
                       countValue == 1
                         ? handleDeleteCartItem(id)
-                        : handleCart({ id, count: -1 });
+                        : handleCart({ id, count: -1 }, restaurantId);
                     }}
                   >
                     -
