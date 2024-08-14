@@ -53,6 +53,16 @@ input MenuItemInput {
   rating: String
 }
 
+input MenuItemEditInput {
+  id: String
+  name: String!
+  description: String
+  price: Float!
+  category: String!
+  imageURL: String
+  rating: String
+}
+
 input CreateRestaurantInput {
   name: String!
   email: String!
@@ -416,7 +426,7 @@ type Mutation {
   createRestaurant(restaurant: CreateRestaurantInput!): Restaurant!
   updateRestaurant(user: CreateRestaurantInput): Restaurant
 
-  addFoodItem(menuItem: MenuItemInput!): MenuItem
+  addFoodItem(menuItem: MenuItemEditInput!): MenuItem
   editFoodItem(menuItem: MenuItemInput!): MenuItem
   deleteFoodItem(id: String!): MenuItem
 

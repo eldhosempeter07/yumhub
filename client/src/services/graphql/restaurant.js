@@ -246,7 +246,7 @@ export const RESTAURANT_ITEMS = gql`
 `;
 
 export const ADD_FOOD_ITEM = gql`
-  mutation AddFoodItem($menuItem: MenuItemInput!) {
+  mutation AddFoodItem($menuItem: MenuItemEditInput!) {
     addFoodItem(menuItem: $menuItem) {
       id
       name

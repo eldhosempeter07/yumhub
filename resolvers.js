@@ -876,8 +876,9 @@ const resolvers = {
 
     editFoodItem: async (_, { menuItem }) => {
       try {
+        console.log(menuItem);
         const id = menuItem.id;
-        const item = await Item.findOneAndUpdate(id, menuItem);
+        const item = await Item.findByIdAndUpdate(id, menuItem);
         return item;
       } catch (error) {
         console.log(error);

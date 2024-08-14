@@ -14,7 +14,6 @@ import {
   EDIT_FOOD_ITEM,
   RESTAURANT_ITEM_BY_ID,
   RESTAURANT_ITEMS,
-  RESTAURANT_ORDERS,
 } from "../../services/graphql/restaurant";
 import SideNavbar from "../../components/SideNavbar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -43,7 +42,7 @@ const RestaurantEditItem = () => {
         if (image) handleImageChange(image);
         else navigate("/restaurant-items");
       },
-      refetchQueries: [{ query: RESTAURANT_ORDERS }],
+      refetchQueries: [{ query: RESTAURANT_ITEMS }],
     });
 
   useEffect(() => {
@@ -58,6 +57,8 @@ const RestaurantEditItem = () => {
       });
     }
   }, [data]);
+
+  console.log(item);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +92,7 @@ const RestaurantEditItem = () => {
         variables: {
           menuItem: {
             ...item,
+            id: id,
             imageURL: image ? image.name : data?.restaurantItemById?.imageURL,
             price: parseFloat(item.price),
           },
