@@ -68,7 +68,7 @@ const AdminEditUser = () => {
 
   return (
     <Row>
-      <Col lg={2} className="admin-nav">
+      <Col lg={2} className="admin-nav admin-height">
         <AdminSideNav />
       </Col>
       <Col lg={8}>

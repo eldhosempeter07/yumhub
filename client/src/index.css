@@ -310,6 +310,10 @@
   background-color: #ffb833 !important;
 }
 
+.admin-height {
+  height: 100vh !important;
+}
+
 @media (max-width: 1530px) {
   .checkout-delivery-card,
   .checkout-order-details {
@@ -326,6 +330,9 @@
 }
 
 @media (max-width: 991px) {
+  .admin-height {
+    height: auto !important;
+  }
   .checkout-order-card,
   .checkout-delivery-card {
     width: 100% !important;

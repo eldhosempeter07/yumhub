@@ -116,7 +116,7 @@ const RestaurantProfile = () => {
 
   return (
     <Row>
-      <Col lg={2} className="bg-dark">
+      <Col lg={2} className="bg-dark admin-height">
         <SideNavbar />
       </Col>
       <Col lg={8}>

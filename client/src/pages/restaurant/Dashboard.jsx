@@ -8,7 +8,7 @@ const Dashboard = () => {
   const { data, loading, error } = useQuery(GET_RESTAURANT_MONTHLY_ORDERS);
   return (
     <Row>
-      <Col lg={2} className="bg-dark ">
+      <Col lg={2} className="bg-dark admin-height ">
         <SideNavbar />
       </Col>
       <Col lg={8}>
