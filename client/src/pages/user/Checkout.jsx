@@ -284,7 +284,7 @@ const Checkout = () => {
               </Accordion>
 
               <p className="border-top border-4"></p>
-
+              {/* 
               <h3 className="fw-semibold">Promotion</h3>
               <Card.Text className="d-flex mt-4">
                 <h2>
@@ -294,7 +294,7 @@ const Checkout = () => {
                   <h5>Add promo code</h5>
                 </div>
               </Card.Text>
-              <p className="border-top border-4"></p>
+              <p className="border-top border-4"></p> */}
 
               <h4 className="fw-semibold">Order total</h4>
               <Card.Text className="mt-4 text-secondary">
