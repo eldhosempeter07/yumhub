@@ -148,7 +148,7 @@ const HomePage = () => {
             <div className="my-5 px-5">
               <div className="d-flex justify-content-between mb-4">
                 <h4 className="text-success fw-bold">Featured Restaurants</h4>
-                <a href="/restaurant" className="text-success fw-bold">
+                <a href="/restaurants" className="text-success fw-bold">
                   View All
                 </a>
               </div>
