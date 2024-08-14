@@ -55,7 +55,7 @@ const RestaurantEditOrder = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <Row className="restaurant-row">
+    <Row>
       <Col lg={2} className="bg-dark">
         <SideNavbar />
       </Col>

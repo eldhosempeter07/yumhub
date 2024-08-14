@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 const Dashboard = () => {
   const { data, loading, error } = useQuery(GET_RESTAURANT_MONTHLY_ORDERS);
   return (
-    <Row className="restaurant-row">
+    <Row>
       <Col lg={2} className="bg-dark ">
         <SideNavbar />
       </Col>

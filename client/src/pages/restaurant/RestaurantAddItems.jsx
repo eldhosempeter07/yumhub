@@ -85,7 +85,7 @@ const RestaurantAddItems = () => {
   };
 
   return (
-    <Row className="restaurant-row">
+    <Row>
       <Col lg={2} className="bg-dark">
         <SideNavbar />
       </Col>

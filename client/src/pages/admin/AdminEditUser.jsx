@@ -67,7 +67,7 @@ const AdminEditUser = () => {
   };
 
   return (
-    <Row className="restaurant-row">
+    <Row>
       <Col lg={2} className="admin-nav">
         <AdminSideNav />
       </Col>

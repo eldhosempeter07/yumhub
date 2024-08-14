@@ -31,11 +31,11 @@ const AdminRestaurant = () => {
     );
   }
   return (
-    <Row className="restaurant-row">
+    <Row>
       <Col lg={2} className="admin-nav">
         <AdminSideNav />
       </Col>
-      <Col lg={8}>
+      <Col lg={10}>
         <h3 className="font-bold text-success text-center uppercase fw-bold mt-4 mb-5">
           Restaurants
         </h3>
