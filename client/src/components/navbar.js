@@ -138,7 +138,6 @@ const Navbar = () => {
                       backgroundColor: "#fff",
                       zIndex: 1000,
                       color: "#333",
-                      minHeight: "300px",
                     }}
                   >
                     {notificationsData?.notifications.length > 0 ? (
@@ -152,7 +151,7 @@ const Navbar = () => {
                               borderBottom: "1px solid #ddd",
                             }}
                           >
-                            <div className="mb-0 text-dark">
+                            <div className="mb-0 text-dark mt-4">
                               <p style={{ fontSize: "15px" }}>
                                 Order from {notification.restaurantName}
                                 <span className="d-block mt-2">
