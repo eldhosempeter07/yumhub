@@ -108,6 +108,7 @@ const AdminEditOrder = () => {
                 <option value="Pending">Pending</option>
                 <option value="Pick Up">Pick Up</option>
                 <option value="Declined">Declined</option>
+                <option value="Completed">Completed</option>
               </Form.Control>
             </Form.Group>
 

@@ -341,6 +341,15 @@ input TimingByDayInput {
   id: String
 }
 
+type Notification {
+  _id: ID!
+  restaurantName: String!
+  userId: String!
+  date: String!
+  price: Float!
+  status: String!
+}
+
 type Query {
   orders: [Order]!
   foodItems: [MenuItem]!
@@ -355,6 +364,7 @@ type Query {
   payment: [Payment]
   favourite: Favourite
   getRestaurantTimingByDay(timing: TimingByDayInput): RestaurantTiming
+  notifications: [Notification!]!
 
   # Restaurant
   restaurantOrders: [Order]

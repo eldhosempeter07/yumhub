@@ -105,6 +105,36 @@ const TimingSchema = new Schema({
   },
 });
 
+const notificationSchema = new Schema({
+  restaurantName: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  status: {
+    type: String,
+    required: true,
+    default: "Pending",
+  },
+  isRead: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const Timing = model("Timing", TimingSchema);
 const User = model("User", UserSchema);
 const Resturant = model("Resturant", ResturantSchema);
@@ -114,6 +144,7 @@ const Payment = model("Payment", PaymentSchema);
 const Order = model("Order", OrderSchema);
 const Address = model("Address", AddressSchema);
 const Favourite = model("Favourite", FavouriteSchema);
+const Notification = model("Notification", notificationSchema);
 
 module.exports = {
   User,
@@ -125,4 +156,5 @@ module.exports = {
   Order,
   Favourite,
   Timing,
+  Notification,
 };

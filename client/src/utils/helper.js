@@ -67,3 +67,39 @@ export const getBackendUrl = () => {
     ? "https://yum-hub-683741ba0e1d.herokuapp.com"
     : "http://localhost:4000";
 };
+
+export function formatTimestamp(timestamp) {
+  // Ensure the timestamp is a number
+  const timestampNum = Number(timestamp);
+
+  // Check if timestamp is valid
+  if (isNaN(timestampNum) || timestampNum <= 0) {
+    console.error("Invalid timestamp:", timestamp);
+    return "Invalid timestamp";
+  }
+
+  const dateObj = new Date(timestampNum);
+
+  // Check if the date is valid
+  if (isNaN(dateObj.getTime())) {
+    console.error("Invalid Date object:", dateObj);
+    return "Invalid Date";
+  }
+
+  // Format the date
+  const day = dateObj.getDate();
+  const month = dateObj.toLocaleString("default", { month: "short" });
+  const formattedDate = `${day} ${month}.`;
+
+  // Format the time
+  const formattedTime = dateObj.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  const result = `${formattedDate} ${formattedTime}`;
+
+  console.log(result);
+  return result;
+}

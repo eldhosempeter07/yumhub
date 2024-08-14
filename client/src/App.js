@@ -46,9 +46,14 @@ import AdminEditRestaurant from "./pages/admin/AdminEditRestaurant";
 import AdminEditUser from "./pages/admin/AdminEditUser";
 import AdminProtectedRoute from "./services/adminProtetedRoute";
 import RootRoute from "./services/rootRoute";
+import NotificationsPage from "./pages/user/NotificationPage";
 
 const App = () => {
-  const { loading, data } = useQuery(CART);
+  const isAuthenticated = !!localStorage.getItem("token");
+  const type = localStorage.getItem("type");
+  const { loading, data } = useQuery(CART, {
+    skip: !isAuthenticated || type != "user",
+  });
 
   return (
     <Router>
@@ -198,6 +203,21 @@ const App = () => {
               }
             >
               <ProtectedRoute element={<Profile />} />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <ProtectedRoute element={<NotificationsPage />} />
             </Suspense>
           }
         />

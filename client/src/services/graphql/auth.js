@@ -307,3 +307,15 @@ export const GET_RESTAURANT_TIMING_BY_DAY = gql`
     }
   }
 `;
+
+export const GET_NOTIFICATIONS = gql`
+  query GetNotifications {
+    notifications {
+      _id
+      restaurantName
+      date
+      price
+      status
+    }
+  }
+`;

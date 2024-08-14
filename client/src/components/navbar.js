@@ -1,29 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar as BootstrapNavbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { CART } from "../services/graphql/auth";
+import { CART, GET_NOTIFICATIONS } from "../services/graphql/auth";
 import Logo from "../utils/Pics/Logo.jpg";
-import { isTokenExpired } from "../utils/helper";
+import { formatTimestamp, isTokenExpired } from "../utils/helper";
 
 const Navbar = () => {
   const isAuthenticated = !!localStorage.getItem("token");
   const type = localStorage.getItem("type");
-  const { data, refetch } = useQuery(CART);
+  const userId = localStorage.getItem("userId");
+  const { data: cartData } = useQuery(CART);
+  const { data: notificationsData } = useQuery(GET_NOTIFICATIONS);
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleDropdown = () => setIsOpen(!isOpen);
   const handleLogout = React.useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
     localStorage.removeItem("type");
+    localStorage.removeItem("userId");
     navigate("/");
   }, [navigate]);
-
-  useEffect(() => {
-    if (data?.cart?.userId == null) {
-      refetch();
-    }
-  }, [data?.cart?.userId, refetch]);
 
   const location = useLocation();
 
@@ -31,9 +30,7 @@ const Navbar = () => {
     if (localStorage.getItem("token")) {
       const token = localStorage.getItem("token");
       if (isTokenExpired(token)) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        localStorage.removeItem("type");
+        handleLogout();
         if (
           location.pathname !== "/" ||
           location.pathname !== "/restaurants" ||
@@ -45,7 +42,7 @@ const Navbar = () => {
         }
       }
     }
-  }, [navigate]);
+  }, [navigate, handleLogout]);
 
   return (
     <BootstrapNavbar collapseOnSelect expand="lg" className="yum_nav py-1">
@@ -108,10 +105,82 @@ const Navbar = () => {
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>
+
+              <div className="position-relative">
+                <p
+                  onClick={toggleDropdown}
+                  className=" text-uppercase py-0 mt-1 fs-4"
+                  type="button"
+                  style={{ border: "none", background: "transparent" }}
+                >
+                  <i class="bi bi-bell"></i>
+                </p>
+                {isOpen && (
+                  <div
+                    className="dropdown-menu show"
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      right: 0,
+                      width: "400px",
+                      overflowY: "auto",
+                      backgroundColor: "#fff",
+                      zIndex: 1000,
+                      color: "#333",
+                    }}
+                  >
+                    {notificationsData?.notifications.length > 0 ? (
+                      notificationsData.notifications
+                        ?.slice(0, 5)
+                        .map((notification) => (
+                          <div
+                            key={notification._id}
+                            className="dropdown-item"
+                            style={{
+                              borderBottom: "1px solid #ddd",
+                            }}
+                          >
+                            <div className="mb-0 text-dark">
+                              <p style={{ fontSize: "15px" }}>
+                                Order from {notification.restaurantName}
+                                <span className="d-block mt-2">
+                                  is {notification.status}{" "}
+                                </span>
+                              </p>
+                              <p
+                                className="text-end"
+                                style={{ fontSize: "14px" }}
+                              >
+                                {formatTimestamp(notification?.date)}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                    ) : (
+                      <div className="dropdown-item">No Notifications</div>
+                    )}
+                    {notificationsData?.notifications.length == 0 ? null : (
+                      <div
+                        onClick={() => navigate("/notifications")}
+                        className="dropdown-item text-center"
+                        style={{
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                          backgroundColor: "#f8f9fa",
+                          color: "#333",
+                        }}
+                      >
+                        Show All
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
               <Nav.Link className="text-white cart" as={Link} to="/cart">
                 <i className="bi bi-cart"></i>
                 <span className="cart-item-count">
-                  {data?.cart?.totalCount || 0}
+                  {cartData?.cart?.totalCount || 0}
                 </span>
               </Nav.Link>
             </>

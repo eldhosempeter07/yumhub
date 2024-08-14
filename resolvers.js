@@ -11,6 +11,7 @@ const {
   Payment,
   Favourite,
   Timing,
+  Notification,
 } = require("./models");
 const { hashPassword, verifyPassword } = require("./utils/utils");
 const jwt = require("jsonwebtoken");
@@ -213,6 +214,20 @@ const resolvers = {
       } catch (error) {
         console.error(error);
         throw new Error("Failed to fetch restaurant timings");
+      }
+    },
+
+    notifications: async (_, __, { user }) => {
+      try {
+        const notifications = await Notification.find({
+          userId: user.email,
+        }).sort({
+          date: -1,
+        });
+        return notifications;
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+        throw new Error("Failed to fetch notifications.");
       }
     },
 
@@ -763,9 +778,7 @@ const resolvers = {
         });
 
         const checkoutInfo = await Order.create(order);
-
         await Cart.deleteMany({});
-
         return checkoutInfo;
       } catch (error) {
         console.error("Error creating order:", error);
@@ -883,22 +896,22 @@ const resolvers = {
 
     editOrderStatus: async (_, { orderId, newStatus }, { user }) => {
       if (!user || !user.email) {
-        throw new Error("User not authenticated."); // Handle case where user is not authenticated
+        throw new Error("User not authenticated.");
       }
 
       try {
         const restaurant = await Resturant.findOne({ email: user.email });
         if (!restaurant) {
-          throw new Error("Restaurant not found."); // Handle case where restaurant is not found
+          throw new Error("Restaurant not found.");
         }
 
         const order = await Order.findOne({
-          _id: orderId, // Convert orderId to ObjectId type
-          "orderItems.restaurantName": restaurant.name, // Ensure the order belongs to the restaurant
+          _id: orderId,
+          "orderItems.restaurantName": restaurant.name,
         });
 
         if (!order) {
-          throw new Error("Order not found."); // Handle case where order is not found
+          throw new Error("Order not found.");
         }
         order.orderItems.forEach((item) => {
           if (item.restaurantName === restaurant.name) {
@@ -909,6 +922,17 @@ const resolvers = {
         order.markModified("orderItems");
 
         await order.save();
+
+        const notification = new Notification({
+          restaurantName: restaurant.name,
+          userId: order.userId,
+          date: new Date(),
+          price: order.totalAmount,
+          status: newStatus,
+        });
+
+        await notification.save();
+
         return order;
       } catch (error) {
         console.error("Error updating order status:", error);
@@ -993,7 +1017,7 @@ const resolvers = {
         });
 
         if (!order) {
-          throw new Error("Order not found."); // Handle case where order is not found
+          throw new Error("Order not found.");
         }
         order.orderItems.forEach((item) => {
           if (item.restaurantName === restaurant.name) {
@@ -1004,6 +1028,16 @@ const resolvers = {
         order.markModified("orderItems");
 
         await order.save();
+
+        const notification = new Notification({
+          restaurantName: restaurant.name,
+          userId: order.userId,
+          date: new Date(),
+          price: order.totalAmount,
+          status: newStatus,
+        });
+
+        await notification.save();
         return order;
       } catch (error) {
         console.error("Error updating order status:", error);
