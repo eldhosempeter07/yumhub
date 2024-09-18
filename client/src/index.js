@@ -17,7 +17,7 @@ import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 const backendURL =
   process.env.NODE_ENV === "production"
-    ? "https://yum-hub-683741ba0e1d.herokuapp.com/graphql"
+    ? "https://flavorfleet-1a54fa96a78a.herokuapp.com/graphql"
     : "http://localhost:4000/graphql";
 
 const httpLink = createUploadLink({

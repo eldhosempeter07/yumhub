@@ -64,7 +64,7 @@ export const isTokenExpired = (token) => {
 
 export const getBackendUrl = () => {
   return process.env.NODE_ENV === "production"
-    ? "https://yum-hub-683741ba0e1d.herokuapp.com"
+    ? "https://flavorfleet-1a54fa96a78a.herokuapp.com"
     : "http://localhost:4000";
 };
 
