@@ -30,9 +30,12 @@ const Restaurants = () => {
 
   const types = [
     { id: 1, name: "Indian" },
-    { id: 4, name: "Fast Food" },
-    { id: 5, name: "Thai" },
-    { id: 6, name: "Mexican" },
+    { id: 2, name: "Fast Food" },
+    { id: 3, name: "Thai" },
+    { id: 4, name: "Mexican" },
+    { id: 5, name: "Italian" },
+    { id: 6, name: "Chinese" },
+    { id: 7, name: "French" },
   ];
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
@@ -56,16 +59,6 @@ const Restaurants = () => {
     }
   };
 
-  const Loading = () => {
-    if (resturantsLoading) {
-      return (
-        <div className="d-flex justify-content-center align-items-center primary-height">
-          <Spinner animation="border" />
-        </div>
-      );
-    }
-  };
-
   return (
     <>
       <Navbar />
@@ -75,7 +68,7 @@ const Restaurants = () => {
         </div>
       ) : (
         <>
-          <Row className="restaurant-row mt-3 ">
+          {/* <Row className="restaurant-row mt-3 ">
             <Col lg={2}></Col>
             <Col lg={6} sm={8}>
               <Form.Group controlId="formSearch">
@@ -96,31 +89,35 @@ const Restaurants = () => {
                 <i className="bi bi-search "></i>
               </span>
             </Col>
-          </Row>
+          </Row> */}
           {resturantsLoading ? (
             <div className="d-flex justify-content-center align-items-center vh-100">
               <Spinner animation="border" />
             </div>
           ) : (
-            <Row className="mw-100">
+            <Row className="mw-100 mt-5">
               <Col lg={3} className=" categories d-flex justify-content-center">
                 <div>
                   <h5 className="fw-bold ">Filters</h5>
                   <div className="mt-5">
-                    <h6 className="my-4 fw-bold text-uppercase">Categories</h6>
-                    {types.map((type) => (
-                      <Form.Check
-                        type="checkbox"
-                        id={`${type.name}-checkbox`}
-                        label={type.name}
-                        className="my-3"
-                        key={type.id}
-                        onClick={() => {
-                          handleFilter(type.name);
-                        }}
-                        checked={filteredRestaurants.includes(type.name)}
-                      />
-                    ))}
+                    <>
+                      <h6 className="my-4 fw-bold text-uppercase">
+                        Categories
+                      </h6>
+                      {types.map((type) => (
+                        <Form.Check
+                          type="checkbox"
+                          id={`${type.name}-checkbox`}
+                          label={type.name}
+                          className="my-3"
+                          key={type.id}
+                          onClick={() => {
+                            handleFilter(type.name);
+                          }}
+                          checked={filteredRestaurants.includes(type.name)}
+                        />
+                      ))}
+                    </>
                   </div>
                 </div>
               </Col>

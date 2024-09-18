@@ -58,8 +58,6 @@ const RestaurantEditItem = () => {
     }
   }, [data]);
 
-  console.log(item);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setItem({

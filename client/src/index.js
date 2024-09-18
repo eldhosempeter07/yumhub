@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router } from "react-router-dom";
+import "react-loading-skeleton/dist/skeleton.css";
 import App from "./App";
 import "./index.css";
 import "./styles/App.css";
@@ -42,7 +44,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ApolloProvider client={client}>
     <React.StrictMode>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </React.StrictMode>
   </ApolloProvider>
 );

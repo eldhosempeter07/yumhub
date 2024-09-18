@@ -29,7 +29,7 @@ main {
 
 .yum_nav {
   color: #fff;
-  background: hsl(39, 100%, 60%);
+  background: #ff741d;
   padding: 20px;
   display: flex;
   flex-direction: row;
@@ -71,7 +71,6 @@ main {
 }
 
 nav {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -410,7 +409,7 @@ footer {
 .toggle {
   background-color: #cdd331;
   height: 100%;
-  background: linear-gradient(to right, #ffb833, #d68b00);
+  background: linear-gradient(to right, #ff741d, #d68b00);
   color: #fff;
   position: relative;
   left: -100%;

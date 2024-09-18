@@ -1,11 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { Suspense } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import React, { Suspense, useEffect } from "react";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import UserLoginPage from "./pages/user/UserLoginPage";
 import RestaurantLoginPage from "./pages/restaurant/RestaurantLoginPage";
@@ -49,14 +44,37 @@ import RootRoute from "./services/rootRoute";
 import NotificationsPage from "./pages/user/NotificationPage";
 
 const App = () => {
-  const isAuthenticated = !!localStorage.getItem("token");
-  const type = localStorage.getItem("type");
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname == "/") {
+      document.title = "FlavorFleet";
+    } else document.title = pathname.slice(1);
+  }, []);
 
   return (
-    <Router>
-      <Routes>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <RootRoute element={<HomePage />} />
+          </Suspense>
+        }
+      />
+      {/* <Route path="/" element={<HomePage />} /> */}
+      <Route path="/login" element={<UserLoginPage />} />
+      <Route path="/register" element={<UserRegisterPage />} />
+      <Route path="/admin">
+        <Route path="login" element={<AdminLogin />} />
         <Route
-          path="/"
+          path="dashboard"
           element={
             <Suspense
               fallback={
@@ -65,114 +83,95 @@ const App = () => {
                 </div>
               }
             >
-              <RootRoute element={<HomePage />} />
+              <AdminProtectedRoute element={<AdminDashboard />} />
             </Suspense>
           }
         />
-        {/* <Route path="/" element={<HomePage />} /> */}
-        <Route path="/login" element={<UserLoginPage />} />
-        <Route path="/register" element={<UserRegisterPage />} />
-        <Route path="/admin">
-          <Route path="login" element={<AdminLogin />} />
-          <Route
-            path="dashboard"
-            element={
-              <Suspense
-                fallback={
-                  <div className="d-flex justify-content-center align-items-center vh-100">
-                    <Spinner animation="border" />
-                  </div>
-                }
-              >
-                <AdminProtectedRoute element={<AdminDashboard />} />
-              </Suspense>
-            }
-          />
-          <Route
-            path="restaurant"
-            element={
-              <Suspense
-                fallback={
-                  <div className="d-flex justify-content-center align-items-center vh-100">
-                    <Spinner animation="border" />
-                  </div>
-                }
-              >
-                <AdminProtectedRoute element={<AdminRestaurant />} />
-              </Suspense>
-            }
-          />
-          <Route
-            path="restaurant/edit/:id"
-            element={
-              <Suspense
-                fallback={
-                  <div className="d-flex justify-content-center align-items-center vh-100">
-                    <Spinner animation="border" />
-                  </div>
-                }
-              >
-                <AdminProtectedRoute element={<AdminEditRestaurant />} />
-              </Suspense>
-            }
-          />
-          <Route
-            path="users"
-            element={
-              <Suspense
-                fallback={
-                  <div className="d-flex justify-content-center align-items-center vh-100">
-                    <Spinner animation="border" />
-                  </div>
-                }
-              >
-                <AdminProtectedRoute element={<AdminUsers />} />
-              </Suspense>
-            }
-          />
-          <Route
-            path="user/edit/:id"
-            element={
-              <Suspense
-                fallback={
-                  <div className="d-flex justify-content-center align-items-center vh-100">
-                    <Spinner animation="border" />
-                  </div>
-                }
-              >
-                <AdminProtectedRoute element={<AdminEditUser />} />
-              </Suspense>
-            }
-          />
-          <Route
-            path="orders"
-            element={
-              <Suspense
-                fallback={
-                  <div className="d-flex justify-content-center align-items-center vh-100">
-                    <Spinner animation="border" />
-                  </div>
-                }
-              >
-                <AdminProtectedRoute element={<AdminOrders />} />
-              </Suspense>
-            }
-          />
-          <Route
-            path="order/edit/:resId/:id"
-            element={
-              <Suspense
-                fallback={
-                  <div className="d-flex justify-content-center align-items-center vh-100">
-                    <Spinner animation="border" />
-                  </div>
-                }
-              >
-                <AdminProtectedRoute element={<AdminEditOrder />} />
-              </Suspense>
-            }
-          />
-          {/* <Route path="login" element={<AdminLogin />} />
+        <Route
+          path="restaurant"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <AdminProtectedRoute element={<AdminRestaurant />} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="restaurant/edit/:id"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <AdminProtectedRoute element={<AdminEditRestaurant />} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="users"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <AdminProtectedRoute element={<AdminUsers />} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="user/edit/:id"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <AdminProtectedRoute element={<AdminEditUser />} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="orders"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <AdminProtectedRoute element={<AdminOrders />} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="order/edit/:resId/:id"
+          element={
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center vh-100">
+                  <Spinner animation="border" />
+                </div>
+              }
+            >
+              <AdminProtectedRoute element={<AdminEditOrder />} />
+            </Suspense>
+          }
+        />
+        {/* <Route path="login" element={<AdminLogin />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="restaurant" element={<AdminRestaurant />} />
           <Route path="restaurant/edit/:id" element={<AdminEditRestaurant />} />
@@ -180,301 +179,297 @@ const App = () => {
           <Route path="user/edit/:id" element={<AdminEditUser />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="order/edit/:resId/:id" element={<AdminEditOrder />} /> */}
-        </Route>
-        <Route path="/restaurant-login" element={<RestaurantLoginPage />} />
-        <Route
-          path="/restaurant-register"
-          element={<RestaurantRegisterPage />}
-        />
-        <Route path="/restaurants" element={<Restaurants />} />
-        <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+      </Route>
+      <Route path="/restaurant-login" element={<RestaurantLoginPage />} />
+      <Route path="/restaurant-register" element={<RestaurantRegisterPage />} />
+      <Route path="/restaurants" element={<Restaurants />} />
+      <Route path="/restaurant/:id" element={<RestaurantDetails />} />
 
-        <Route
-          path="/profile"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Profile />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/profile"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Profile />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/notifications"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<NotificationsPage />} />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Cart />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/notifications"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<NotificationsPage />} />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Cart />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/checkout"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Checkout />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/checkout"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Checkout />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/address"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Address />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/address"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Address />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/favourites"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Favourites />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/favourites"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Favourites />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/orders"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Orders />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/orders"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Orders />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/payment"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Payment />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/payment"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Payment />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/success"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Confirmation />} />
-            </Suspense>
-          }
-        />
-        {/* Business  */}
+      <Route
+        path="/success"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Confirmation />} />
+          </Suspense>
+        }
+      />
+      {/* Business  */}
 
-        <Route
-          path="/dashboard"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <ProtectedRoute element={<Dashboard />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/dashboard"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <ProtectedRoute element={<Dashboard />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/restaurant-orders"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantOrders />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/restaurant-orders"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantOrders />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/edit-order/:id"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantEditOrder />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/edit-order/:id"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantEditOrder />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/restaurant-items"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantItems />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/restaurant-items"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantItems />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/add-item"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantAddItems />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/add-item"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantAddItems />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/edit-item/:id"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantEditItem />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/edit-item/:id"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantEditItem />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/restaurant-timing"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantTimings />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/restaurant-timing"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantTimings />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/add-timing"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantAddTiming />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/add-timing"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantAddTiming />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/restaurant-timing/:id"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantEditTiming />} />
-            </Suspense>
-          }
-        />
+      <Route
+        path="/restaurant-timing/:id"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantEditTiming />} />
+          </Suspense>
+        }
+      />
 
-        <Route
-          path="/restaurant-profile"
-          element={
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center vh-100">
-                  <Spinner animation="border" />
-                </div>
-              }
-            >
-              <BusinessProtectedRoute element={<RestaurantProfile />} />
-            </Suspense>
-          }
-        />
-      </Routes>
-    </Router>
+      <Route
+        path="/restaurant-profile"
+        element={
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" />
+              </div>
+            }
+          >
+            <BusinessProtectedRoute element={<RestaurantProfile />} />
+          </Suspense>
+        }
+      />
+    </Routes>
   );
 };
 

@@ -19,9 +19,25 @@ const path = require("path");
 
 const resolvers = {
   Query: {
-    foodItems: async () => {
-      const foodItems = await Item.find();
-      return foodItems;
+    foodItems: async (_, { filter }) => {
+      const { search, category } = filter;
+      console.log(category);
+
+      let query = {};
+      if (search != "") {
+        query.name = { $regex: search, $options: "i" };
+      }
+      if (category !== null) {
+        query.category = { $in: category };
+      }
+      try {
+        const foodItems = await Item.find(
+          category !== null || search !== "" ? query : null
+        );
+        return foodItems;
+      } catch (error) {
+        throw new Error(`Error fetching Food Items: ${error.message}`);
+      }
     },
     foodItemsByRestaurant: async (_, { id }) => {
       const foodItems = await Item.find({ restaurantId: id });

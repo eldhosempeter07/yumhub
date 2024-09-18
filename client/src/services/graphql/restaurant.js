@@ -49,8 +49,8 @@ export const RESTAURANT_INFO = gql`
 `;
 
 export const GET_FOOD_ITEMS = gql`
-  query FoodItems {
-    foodItems {
+  query FoodItems($filter: FoodItemsFilter) {
+    foodItems(filter: $filter) {
       id
       name
       description

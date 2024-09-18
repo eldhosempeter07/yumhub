@@ -22,7 +22,7 @@ const Orders = () => {
           {data?.orders?.length > 0 ? (
             data?.orders?.map((res) => <OrderCard order={res} />)
           ) : (
-            <div className="text-center my-5">
+            <div className="text-center order-width">
               <div className="d-flex justify-content-center align-items-center fw-bold mb-2">
                 <h5>No Orders</h5>
               </div>

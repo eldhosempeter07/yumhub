@@ -24,12 +24,12 @@ function OrderCard({ order }) {
     <>
       <div className="cart-container ">
         <div className="mx-auto overflow-hidden fav-container">
-          <div className="mx-3">
+          <div className="order-width">
             {orderItems?.length > 0 &&
               orderItems.map((item) => (
                 <div
                   key={item.restaurantId}
-                  className="border border-3 px-2 my-5 rounded"
+                  className="border border-3 px-2 order-width my-5 rounded"
                 >
                   <Nav.Link
                     className="fw-bold cart-item-name text-success fs-4 mt-3 mx-3"
@@ -48,8 +48,8 @@ function OrderCard({ order }) {
                   {item.items.map((i) => (
                     <div key={i.id}>
                       <Card className="mx-3 my-5 ">
-                        <Row className="d-flex flex-wrap justify-content-between">
-                          <Col lg={3} className="img-container">
+                        <Row className="d-flex flex-wrap justify-content-evenly">
+                          <Col lg={2} className="img-container">
                             <Card.Img
                               variant="top"
                               src={imageUrl?.replace(
@@ -57,14 +57,15 @@ function OrderCard({ order }) {
                                 i?.imageURL
                               )}
                               height={"200px"}
-                              width={"18rem"}
+                              width={"5rem"}
                             />
                           </Col>
                           <Col lg={8} className="px-0 ">
                             <div className=" d-flex flex-wrap justify-content-between mt-5 mx-2 fw-bold">
-                              <p className="fw-bold cart-item-name mt-3 text-success">
+                              <p className="fw-bold cart-item fs-4 mt-3 text-success">
                                 {i?.name}
                               </p>
+
                               <p className="cart-item mt-3">{i?.count}</p>
                               <p className="cart-item mt-3">{i?.category}</p>
                               <p className="cart-item mt-3">$ {i?.price} </p>

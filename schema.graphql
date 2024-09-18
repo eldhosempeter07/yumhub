@@ -312,6 +312,11 @@ input RestaurantFilter {
   category: [String]
 }
 
+input FoodItemsFilter {
+  search: String
+  category: String
+}
+
 type OrderBarChart {
   order: Int
   day: Int
@@ -362,7 +367,7 @@ type Notification {
 
 type Query {
   orders: [Order]!
-  foodItems: [MenuItem]!
+  foodItems(filter: FoodItemsFilter): [MenuItem]!
   foodItemsByRestaurant(id: String): [MenuItem]!
   restaurant(filter: RestaurantFilter): [Restaurant!]!
   restaurantById(id: String): Restaurant!
