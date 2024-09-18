@@ -69,8 +69,8 @@ const HomePage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSearch = (e) => {
-    setSearchValue(e.target.value);
+  const handleSearch = (value) => {
+    setSearchValue(value);
   };
 
   const [addToCart] = useMutation(ADD_TO_CART, {

@@ -15,9 +15,7 @@ import { formatTimestamp, isTokenExpired } from "../utils/helper";
 import { Form } from "react-bootstrap";
 
 const FlavorFleetNavbar = (homeProps) => {
-  console.log(homeProps);
   const [showOffcanvas, setShowOffcanvas] = useState(false);
-
   const handleOffcanvasToggle = () => setShowOffcanvas(!showOffcanvas);
   const isAuthenticated = !!localStorage.getItem("token");
   const type = localStorage.getItem("type");
@@ -48,7 +46,7 @@ const FlavorFleetNavbar = (homeProps) => {
     navigate("/");
   }, [navigate]);
 
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -68,7 +66,13 @@ const FlavorFleetNavbar = (homeProps) => {
     }
   }, [navigate, handleLogout]);
 
-  console.log("homeProps.searchValue", homeProps.searchValue);
+  useEffect(() => {
+    if (state?.from == "restaurants") {
+      homeProps.handleSearch(state?.value);
+    }
+  }, [pathname]);
+
+  console.log(state);
 
   return (
     <div className="d-flex">
@@ -282,7 +286,13 @@ const FlavorFleetNavbar = (homeProps) => {
             type="text"
             placeholder="Search For Food"
             value={homeProps.searchValue}
-            onChange={homeProps.handleSearch}
+            onChange={(e) => {
+              if (pathname == "/restaurants")
+                return navigate("/", {
+                  state: { from: "restaurants", value: e.target.value },
+                });
+              homeProps.handleSearch(e.target.value);
+            }}
           />
           <span
             className="home-search-button cursor-pointer"
