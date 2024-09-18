@@ -29,6 +29,7 @@ import MenuItems from "../components/MenuItems";
 const HomePage = () => {
   const location = useLocation();
   const [categorySelected, setCategorySelected] = useState(null);
+  const [isResultShow, setIsResultShow] = useState(false);
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -146,22 +147,24 @@ const HomePage = () => {
   ];
 
   const handleCategory = (name) => {
-    console.log(name);
-    console.log(categorySelected);
-
     if (categorySelected == name) {
-      console.log(1);
       setSearchTerm("");
       setSearchValue("");
       setCategorySelected(null);
+      setIsResultShow(false);
       return refetch({ filter: { search: "", category: null } });
     }
     setCategorySelected(name);
+    setIsResultShow(true);
     return refetch({ filter: { search: searchTerm, category: name } });
   };
 
   const handleSearchTerm = () => {
     setSearchTerm(searchValue);
+    if (searchValue == "" && categorySelected == null) {
+      setIsResultShow(false);
+    }
+    setIsResultShow(true);
   };
 
   return (
@@ -205,7 +208,7 @@ const HomePage = () => {
           )}
         </div>
 
-        {searchTerm == "" ? (
+        {isResultShow == null ? (
           <>
             <div className="my-5 px-5">
               <div className="d-flex justify-content-between mb-4">

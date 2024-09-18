@@ -85,11 +85,11 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
         success_url:
           process.env.NODE_ENV === "production"
-            ? "https://yum-hub-683741ba0e1d.herokuapp.com/success"
+            ? "https://flavorfleet-1a54fa96a78a.herokuapp.com/success"
             : "http://localhost:3000/success",
         cancel_url:
           process.env.NODE_ENV === "production"
-            ? "https://yum-hub-683741ba0e1d.herokuapp.com/checkout"
+            ? "https://flavorfleet-1a54fa96a78a.herokuapp.com/checkout"
             : "http://localhost:3000/checkout",
       });
       res.json({ url: session.url });
