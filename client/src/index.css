@@ -50,8 +50,9 @@
 .home-search-button {
   position: absolute;
   font-weight: bold;
-  top: 45px;
-  right: 10px;
+  font-size: 18px;
+  top: 46px;
+  right: 16px;
 }
 
 .navbar {

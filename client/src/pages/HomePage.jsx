@@ -208,7 +208,7 @@ const HomePage = () => {
           )}
         </div>
 
-        {isResultShow == null ? (
+        {!isResultShow ? (
           <>
             <div className="my-5 px-5">
               <div className="d-flex justify-content-between mb-4">
